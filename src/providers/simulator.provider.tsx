@@ -15,6 +15,8 @@ export function SimulatorProvider({ children }: PropsWithChildren) {
   );
 
   useEffect(() => {
+    // TODO:
+    console.log("POOLS NEW STATE", cards.length);
     // New pools detected
     setCards(shuffleCards(poolsToCards(pools)));
   }, [pools]);

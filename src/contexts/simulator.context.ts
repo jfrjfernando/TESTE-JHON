@@ -8,6 +8,11 @@ export type HandType = (CardBaseType & {
    * Selected card priority to fusion
    */
   priority?: PriorityType;
+
+  /**
+   * Player is focus this card
+   */
+  focus?: boolean;
 })[];
 
 export type SimulatorContextType = {

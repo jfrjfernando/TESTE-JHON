@@ -1,10 +1,21 @@
-import { useCallback, useContext } from "preact/hooks";
+import { useCallback, useContext, useMemo } from "preact/hooks";
 import { PriorityType, SimulatorContext } from "../contexts/simulator.context";
 import { generateHand } from "../services/randomize";
-import { CardBaseType } from "../models/card.model";
+import { PoolType } from "../models/pool.model";
+import { selectPools, unselectPools } from "../services/simulator";
+import { useStorage } from "./storage.hook";
+import { queueFusion } from "../services/fusion";
 
 export function useSimulator() {
+  const { simulator } = useStorage();
   const { hand, setHand, cards, setCards } = useContext(SimulatorContext);
+  const queueCards = useMemo(
+    () =>
+      [...hand]
+        .filter((each) => each.priority)
+        .sort((a, b) => a.priority! - b.priority!),
+    [hand]
+  );
 
   const resetHand = useCallback(
     () => setHand(generateHand(cards)),
@@ -18,26 +29,91 @@ export function useSimulator() {
     resetHand();
   }, [resetHand]);
 
-  const selectHandCard = useCallback(
-    (select: CardBaseType) => {
-      const index = hand.findIndex((card) => card.id === select.id);
+  const selectHandCard = useCallback(() => {
+    const cardIndex = hand.findIndex((each) => each.focus);
+    const card = hand[cardIndex];
 
-      if (!index) {
-        console.error("Internal error: Card not found in hand");
-        return;
+    if (!card) {
+      // Not focus
+      return;
+    }
+
+    const handClone = [...hand];
+
+    if (card.priority) {
+      handClone[cardIndex] = {
+        ...hand[cardIndex],
+        priority: undefined,
+      };
+
+      if (card.priority !== 1) {
+        // It is not the first card in the queue
+
+        for (let i = cardIndex + 1; i < hand.length; i++) {
+          // Find higher cards for moving left
+          const target = handClone[i];
+
+          if (target.priority) {
+            // Move left
+            handClone[i] = {
+              ...target,
+              priority: (target.priority! - 1) as PriorityType,
+            };
+          }
+        }
       }
-
-      const handClone = [...hand];
-
-      handClone[index] = {
-        ...hand[index],
+    } else {
+      handClone[cardIndex] = {
+        ...hand[cardIndex],
         priority: (hand.filter((each) => each.priority).length +
           1) as PriorityType,
       };
+    }
 
-      setHand(handClone);
+    setHand(handClone);
+  }, [hand, setHand]);
+
+  const selectPool = useCallback(
+    (pool: PoolType) => selectPools(pool),
+    [selectPools]
+  );
+
+  const unselectPool = useCallback(
+    (pool: PoolType) => {
+      if (simulator.pools.length <= 1) {
+        // At least one is needed
+        return;
+      }
+
+      unselectPools(pool);
     },
-    [hand, setHand]
+    [unselectPools, simulator]
+  );
+
+  const focusCard = useCallback(
+    (handIndex: number) => {
+      setHand(
+        hand
+          .map((each) => ({
+            ...each,
+            focus: false,
+          }))
+          .map((each, index) =>
+            index === handIndex
+              ? {
+                  ...each,
+                  focus: true,
+                }
+              : each
+          )
+      );
+    },
+    [setHand, hand]
+  );
+
+  const startFusion = useCallback(
+    () => queueFusion(queueCards),
+    [queueCards, queueFusion]
   );
 
   return {
@@ -46,5 +122,9 @@ export function useSimulator() {
     resetHand,
     selectHandCard,
     init,
+    selectPool,
+    unselectPool,
+    focusCard,
+    startFusion,
   };
 }
