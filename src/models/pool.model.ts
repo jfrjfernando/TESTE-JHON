@@ -1,4 +1,4 @@
-import yup from "yup";
+import * as yup from "yup";
 import { generateRandomID } from "../utils/uid";
 
 export type PoolType = {
