@@ -1,14 +1,14 @@
 import { array, InferType, object } from "yup";
-import { PoolModel } from "./pool.model";
+import { GroupModel } from "./group.model";
 
 export type StorageEntityType = InferType<typeof StorageEntity>;
 
 export const StorageEntity = object({
-  // Created pools
-  pools: array().of(PoolModel.required()).required(),
+  // Created groups
+  groups: array().of(GroupModel.required()).required(),
   simulator: object({
-    // Selected pools
-    pools: array().of(PoolModel.required()).required(),
+    // Selected groups
+    groups: array().of(GroupModel.required()).required(),
   }).required(),
 }).required();
 

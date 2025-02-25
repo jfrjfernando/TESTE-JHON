@@ -1,96 +1,31 @@
 import { useCallback, useContext, useMemo } from "preact/hooks";
 import { PriorityType, SimulatorContext } from "../contexts/simulator.context";
 import { generateHand } from "../services/randomize";
-import { PoolType } from "../models/pool.model";
-import { selectPools, unselectPools } from "../services/simulator";
+import { GroupType } from "../models/group.model";
+import { selectGroups, unselectGroups } from "../services/simulator";
 import { useStorage } from "./storage.hook";
-import { queueFusion } from "../services/fusion";
+import { CardBaseType } from "@/models/card.model";
 
 export function useSimulator() {
   const { simulator } = useStorage();
   const { hand, setHand, cards, setCards } = useContext(SimulatorContext);
-  const queueCards = useMemo(
+  const queueCards = useMemo<
+    (CardBaseType & {
+      index: number;
+    })[]
+  >(
     () =>
-      [...hand]
+      hand
+        .map((each, index) => ({
+          ...each,
+          index,
+        }))
         .filter((each) => each.priority)
         .sort((a, b) => a.priority! - b.priority!),
     [hand]
   );
 
-  const resetHand = useCallback(
-    () => setHand(generateHand(cards)),
-    [setCards, generateHand, cards]
-  );
-
-  const init = useCallback(() => {
-    // Initialize the simulator
-
-    // Set the hand
-    resetHand();
-  }, [resetHand]);
-
-  const selectHandCard = useCallback(() => {
-    const cardIndex = hand.findIndex((each) => each.focus);
-    const card = hand[cardIndex];
-
-    if (!card) {
-      // Not focus
-      return;
-    }
-
-    const handClone = [...hand];
-
-    if (card.priority) {
-      handClone[cardIndex] = {
-        ...hand[cardIndex],
-        priority: undefined,
-      };
-
-      if (card.priority !== 1) {
-        // It is not the first card in the queue
-
-        for (let i = cardIndex + 1; i < hand.length; i++) {
-          // Find higher cards for moving left
-          const target = handClone[i];
-
-          if (target.priority) {
-            // Move left
-            handClone[i] = {
-              ...target,
-              priority: (target.priority! - 1) as PriorityType,
-            };
-          }
-        }
-      }
-    } else {
-      handClone[cardIndex] = {
-        ...hand[cardIndex],
-        priority: (hand.filter((each) => each.priority).length +
-          1) as PriorityType,
-      };
-    }
-
-    setHand(handClone);
-  }, [hand, setHand]);
-
-  const selectPool = useCallback(
-    (pool: PoolType) => selectPools(pool),
-    [selectPools]
-  );
-
-  const unselectPool = useCallback(
-    (pool: PoolType) => {
-      if (simulator.pools.length <= 1) {
-        // At least one is needed
-        return;
-      }
-
-      unselectPools(pool);
-    },
-    [unselectPools, simulator]
-  );
-
-  const focusCard = useCallback(
+  const setFocusCard = useCallback(
     (handIndex: number) => {
       setHand(
         hand
@@ -111,9 +46,105 @@ export function useSimulator() {
     [setHand, hand]
   );
 
-  const startFusion = useCallback(
-    () => queueFusion(queueCards),
-    [queueCards, queueFusion]
+  const focusCard = useMemo(() => {
+    const find = hand.find((each) => each.focus);
+
+    if (hand.length < 1) {
+      return;
+    }
+
+    if (!find) {
+      setFocusCard(0);
+
+      return hand[0];
+    }
+
+    return find;
+  }, [hand]);
+
+  const focusCardIndex = useMemo(() => {
+    const find = hand.findIndex((each) => each.focus);
+
+    if (hand.length < 1) {
+      return;
+    }
+
+    if (find < 0) {
+      setFocusCard(0);
+
+      return hand[0];
+    }
+
+    return find;
+  }, [hand]);
+
+  const resetHand = useCallback(
+    () => setHand(generateHand(cards)),
+    [setCards, generateHand, cards]
+  );
+
+  const init = useCallback(() => {
+    // Initialize the simulator
+
+    // Set the hand
+    resetHand();
+  }, [resetHand]);
+
+  const selectHandCard = useCallback(() => {
+    const cardIndex = hand.findIndex((each) => each.focus);
+    const card = hand[cardIndex];
+
+    if (!card) {
+      return;
+    }
+
+    const handClone = [...hand];
+
+    if (card.priority) {
+      // Remove priority
+      handClone[cardIndex] = {
+        ...handClone[cardIndex],
+        priority: undefined,
+      };
+
+      // Reassign priorities to keep order consistent
+      const prioritizedCards = handClone
+        .filter((each) => each.priority)
+        .sort((a, b) => (a.priority ?? 0) - (b.priority ?? 0));
+
+      // Update priorities sequentially
+      prioritizedCards.forEach((each, index) => {
+        each.priority = (index + 1) as PriorityType;
+      });
+    } else {
+      // Assign a new priority (next available number)
+      const nextPriority =
+        hand.filter((each) => each.priority !== undefined).length + 1;
+
+      handClone[cardIndex] = {
+        ...handClone[cardIndex],
+        priority: nextPriority as PriorityType,
+      };
+    }
+
+    setHand(handClone);
+  }, [hand, setHand]);
+
+  const selectPool = useCallback(
+    (pool: GroupType) => selectGroups(pool),
+    [selectGroups]
+  );
+
+  const unselectPool = useCallback(
+    (pool: GroupType) => {
+      if (simulator.groups.length <= 1) {
+        // At least one is needed
+        return;
+      }
+
+      unselectGroups(pool);
+    },
+    [unselectGroups, simulator]
   );
 
   return {
@@ -125,6 +156,8 @@ export function useSimulator() {
     selectPool,
     unselectPool,
     focusCard,
-    startFusion,
+    focusCardIndex,
+    setFocusCard,
+    queueCards,
   };
 }

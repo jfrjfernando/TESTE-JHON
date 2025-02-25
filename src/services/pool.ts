@@ -1,18 +1,18 @@
-import { PoolType } from "../models/pool.model";
+import { GroupType } from "../models/group.model";
 import { STORAGE_KEY } from "../models/storage.entity";
 import { generateRandomID } from "../utils/uid";
 import { storageDispatch, extractFromStorage } from "./storage";
 
-export function createEmptyPool(): PoolType {
+export function createEmptyPool(): GroupType {
   const storage = extractFromStorage();
 
-  const value: PoolType = {
+  const value: GroupType = {
     id: generateRandomID(),
     name: "Untitled",
     cards: [],
   };
 
-  storage.pools.push(value);
+  storage.groups.push(value);
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
 
@@ -21,10 +21,10 @@ export function createEmptyPool(): PoolType {
   return value;
 }
 
-export function deletePool(id: PoolType["id"]): void {
+export function deletePool(id: GroupType["id"]): void {
   const storage = extractFromStorage();
 
-  const index = storage.pools.findIndex((p) => p.id === id);
+  const index = storage.groups.findIndex((p) => p.id === id);
 
   if (index === -1) {
     console.error(`Internal Error: Pool '${id}' was not found!`);
@@ -32,17 +32,17 @@ export function deletePool(id: PoolType["id"]): void {
     return;
   }
 
-  storage.pools.splice(index, 1);
+  storage.groups.splice(index, 1);
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
 
   storageDispatch();
 }
 
-export function updatePool(pool: PoolType): void {
+export function updatePool(pool: GroupType): void {
   const storage = extractFromStorage();
 
-  const index = storage.pools.findIndex((p) => p.id === pool.id);
+  const index = storage.groups.findIndex((p) => p.id === pool.id);
 
   if (index === -1) {
     console.error(`Internal Error: Pool '${pool.id}' was not found!`);
@@ -50,7 +50,7 @@ export function updatePool(pool: PoolType): void {
     return;
   }
 
-  storage.pools[index] = pool;
+  storage.groups[index] = pool;
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
 

@@ -17,7 +17,7 @@ export type HandType = (CardBaseType & {
 
 export type SimulatorContextType = {
   /**
-   * All cards from pools (already shuffled).
+   * All cards from pool (already shuffled).
    */
   cards: CardBaseType[];
 

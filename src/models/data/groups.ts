@@ -1,33 +1,33 @@
 import {
   CardMonsterType,
   CardType,
-  GroupType,
+  GroupType as CardGroupType,
   GuardianType,
   Type,
 } from "../card.model";
-import { PoolType } from "../pool.model";
+import { GroupType } from "../group.model";
 import ALL_CARDS from "./cards";
 
-export const DEFAULT_POOLS: PoolType[] = [
-  ...createGroupPools(),
-  ...createTypePools(),
-  ...createCardTypePools(),
-  ...createGuardianTypePools(),
-  createHighestFusionPool(),
-  createWeaknessPool(),
-  createStrongestPool(),
-  createDefensivePool(),
-  createPasswordLessPool(),
+export const DEFAULT_GROUPS: GroupType[] = [
+  ...createGroupGroups(),
+  ...createTypeGroup(),
+  ...createCardTypeGroup(),
+  ...createGuardianTypeGroup(),
+  createHighestFusionGroup(),
+  createWeaknessGroup(),
+  createStrongestGroup(),
+  createDefensiveGroup(),
+  createPasswordLessGroup(),
 ];
 
 /**
- * Create default pools using the given groups.
+ * Create default groups using the given groups.
  *
  * @param groups
- * @returns pools
+ * @returns groups
  */
-function createGroupPools(): PoolType[] {
-  return Object.values(GroupType)
+function createGroupGroups(): GroupType[] {
+  return Object.values(CardGroupType)
     .map((group) => ({
       id: `default-pool-${group.toLowerCase()}`,
       name: group,
@@ -38,19 +38,19 @@ function createGroupPools(): PoolType[] {
     .filter((each) => each.cards.length > 0);
 }
 
-function createTypePools(): PoolType[] {
+function createTypeGroup(): GroupType[] {
   return Object.values(Type)
     .map((type) => ({
       id: `default-pool-${type.toLowerCase()}`,
       name: type,
       cards: ALL_CARDS.filter(
-        (card) => (card as CardMonsterType).type === type
+        (card) => (card as CardMonsterType)?.type === type
       ).map((each) => each.id),
     }))
     .filter((each) => each.cards.length > 0);
 }
 
-function createCardTypePools(): PoolType[] {
+function createCardTypeGroup(): GroupType[] {
   return Object.values(CardType)
     .map((cardType) => ({
       id: `default-pool-${cardType.toLowerCase()}`,
@@ -62,29 +62,30 @@ function createCardTypePools(): PoolType[] {
     .filter((each) => each.cards.length > 0);
 }
 
-function createGuardianTypePools(): PoolType[] {
+function createGuardianTypeGroup(): GroupType[] {
   return Object.values(GuardianType)
     .map((type) => ({
       id: `default-pool-${type.toLowerCase()}`,
       name: type,
       cards: ALL_CARDS.filter((card) =>
-        (card as CardMonsterType).guardians.includes(type)
+        (card as CardMonsterType)?.guardians?.includes(type)
       ).map((each) => each.id),
     }))
     .filter((each) => each.cards.length > 0);
 }
 
-function createHighestFusionPool(): PoolType {
+function createHighestFusionGroup(): GroupType {
   return {
     id: `default-pool-highest-fusion`,
     name: "Highest Fusion",
-    cards: ALL_CARDS.sort((a, b) => b.fusions!.length - a.fusions!.length)
+    cards: ALL_CARDS.filter((each) => !!each.fusions)
+      .sort((a, b) => b.fusions!.length - a.fusions!.length)
       .slice(0, 30)
       .map((each) => each.id),
   };
 }
 
-function createWeaknessPool(): PoolType {
+function createWeaknessGroup(): GroupType {
   return {
     id: `default-pool-weakness`,
     name: "Weakness",
@@ -102,7 +103,7 @@ function createWeaknessPool(): PoolType {
 }
 
 // Now do the same but this time with the strongest cards
-function createStrongestPool(): PoolType {
+function createStrongestGroup(): GroupType {
   return {
     id: `default-pool-strongest`,
     name: "Strongest",
@@ -119,7 +120,7 @@ function createStrongestPool(): PoolType {
   };
 }
 
-function createDefensivePool(): PoolType {
+function createDefensiveGroup(): GroupType {
   return {
     id: `default-pool-defensive`,
     name: "Defensive",
@@ -133,7 +134,7 @@ function createDefensivePool(): PoolType {
   };
 }
 
-function createPasswordLessPool(): PoolType {
+function createPasswordLessGroup(): GroupType {
   return {
     id: `default-pool-passwordless`,
     name: "Passwordless",

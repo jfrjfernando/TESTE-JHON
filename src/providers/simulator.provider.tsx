@@ -2,29 +2,22 @@ import { PropsWithChildren, useEffect, useState } from "preact/compat";
 import { HandType, SimulatorContext } from "../contexts/simulator.context";
 import { CardBaseType } from "../models/card.model";
 import { useStorage } from "../hooks/storage.hook";
-import { poolsToCards } from "../services/simulator";
-import { shuffleCards } from "../services/randomize";
+import { groupsToCards } from "../services/simulator";
+import { generateHand, shuffleCards } from "../services/randomize";
 
 export function SimulatorProvider({ children }: PropsWithChildren) {
   const {
-    simulator: { pools },
+    simulator: { groups },
   } = useStorage();
-  const [hand, setHand] = useState<HandType>([]);
   const [cards, setCards] = useState<CardBaseType[]>(
-    shuffleCards(poolsToCards(pools))
+    shuffleCards(groupsToCards(groups))
   );
+  const [hand, setHand] = useState<HandType>(generateHand(cards));
 
   useEffect(() => {
-    // TODO:
-    console.log("POOLS NEW STATE", cards.length);
-    // New pools detected
-    setCards(shuffleCards(poolsToCards(pools)));
-  }, [pools]);
-
-  useEffect(() => {
-    // TODO:
-    console.log("CARDS NEW STATE", cards.length);
-  }, [cards]);
+    // New groups detected
+    setCards(shuffleCards(groupsToCards(groups)));
+  }, [groups]);
 
   return (
     <SimulatorContext.Provider

@@ -1,7 +1,7 @@
 import { CardBaseType } from "../models/card.model";
 import { findCardById } from "./finder";
 
-type FusionResponse = {
+export type FusionResponse = {
   /**
    * The fusion was success
    */
@@ -40,7 +40,7 @@ export function resolveFusion(
   return card;
 }
 
-export function queueFusion(queue: CardBaseType[]): FusionResponse[] {
+export function generateQueueFusions(queue: CardBaseType[]): FusionResponse[] {
   if (queue.length < 2) {
     console.error("Can't fusion only one card!");
 

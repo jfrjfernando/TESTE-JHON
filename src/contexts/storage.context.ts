@@ -2,8 +2,8 @@ import React from "preact/compat";
 import { StorageEntityType } from "../models/storage.entity";
 
 export const StorageContext = React.createContext<StorageEntityType>({
-  pools: [],
+  groups: [],
   simulator: {
-    pools: [],
+    groups: [],
   },
 });

@@ -1,28 +1,28 @@
 import { CardBaseType, CardMonsterType, IdType } from "../models/card.model";
-import { PoolType } from "../models/pool.model";
+import { GroupType } from "../models/group.model";
 import { STORAGE_KEY } from "../models/storage.entity";
 import { findCardById } from "./finder";
 import { extractFromStorage, storageDispatch } from "./storage";
 
-export function poolsToCards(
-  pools: PoolType[]
+export function groupsToCards(
+  groups: GroupType[]
 ): (CardBaseType | CardMonsterType)[] {
-  return pools
+  return groups
     .reduce((acc, pool) => {
       acc.push(...pool.cards);
 
       return acc;
-    }, [] as PoolType["cards"])
+    }, [] as GroupType["cards"])
     .map((id) => findCardById(id as IdType))
     .filter((each) => each) as (CardBaseType | CardMonsterType)[];
 }
 
-export function selectPools(...pools: PoolType[]) {
+export function selectGroups(...groups: GroupType[]) {
   const value = extractFromStorage();
 
-  value.simulator.pools = {
-    ...value.simulator.pools,
-    ...pools.filter((each) => !value.simulator.pools.includes(each)),
+  value.simulator.groups = {
+    ...value.simulator.groups,
+    ...groups.filter((each) => !value.simulator.groups.includes(each)),
   };
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(value));
@@ -30,11 +30,11 @@ export function selectPools(...pools: PoolType[]) {
   storageDispatch();
 }
 
-export function unselectPools(...pools: PoolType[]) {
+export function unselectGroups(...groups: GroupType[]) {
   const value = extractFromStorage();
 
-  value.simulator.pools = value.simulator.pools.filter(
-    (each) => !pools.includes(each)
+  value.simulator.groups = value.simulator.groups.filter(
+    (each) => !groups.includes(each)
   );
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(value));

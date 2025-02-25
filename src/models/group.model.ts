@@ -1,7 +1,7 @@
 import * as yup from "yup";
 import { generateRandomID } from "../utils/uid";
 
-export type PoolType = {
+export type GroupType = {
   /**
    * ID of the pool
    */
@@ -18,7 +18,7 @@ export type PoolType = {
   cards: string[];
 };
 
-export const PoolModel: yup.ObjectSchema<PoolType> = yup
+export const GroupModel: yup.ObjectSchema<GroupType> = yup
   .object({
     id: yup.string().default(() => generateRandomID(64)),
     name: yup.string().required(),
