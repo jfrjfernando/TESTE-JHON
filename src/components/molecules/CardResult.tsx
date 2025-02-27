@@ -1,6 +1,6 @@
 import { useFusion } from "@/hooks/fusion.hook";
-import { Card } from "./Card";
 import { CardUnknown } from "../atoms/CardUnknown";
+import { Card } from "./Card";
 
 export function CardResult() {
   const { queueFusions, index } = useFusion();

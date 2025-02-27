@@ -1,5 +1,5 @@
 import { appendAssetsAPIPath } from "@/utils/path";
-import { FRAME_SIZE } from "../molecules/CardAssembler";
+import { FRAME_SIZE } from "../molecules/Card";
 
 export function CardFusionResult() {
   return (

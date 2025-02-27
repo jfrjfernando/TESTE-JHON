@@ -12,7 +12,7 @@ export function LongNumber({
   props?: React.HTMLProps<HTMLImageElement>;
 }) {
   return (
-    <div className={"flex gap-[1px]"}>
+    <div className={"flex gap-[1px] select-none pointer-events-none"}>
       {String(numbers)
         .split("")
         .map((number) => (

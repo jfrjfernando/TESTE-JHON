@@ -1,4 +1,4 @@
-import { GET_CARD_ELEMENT } from "@/components/molecules/CardAssembler";
+import { GET_CARD_ELEMENT } from "@/components/molecules/Card";
 import { CardBaseType } from "@/models/card.model";
 import { useCallback } from "preact/hooks";
 

@@ -1,58 +1,28 @@
-import { GroupType } from "../models/group.model";
-import { STORAGE_KEY } from "../models/storage.entity";
-import { generateRandomID } from "../utils/uid";
-import { storageDispatch, extractFromStorage } from "./storage";
+import { GroupType } from "@/models/group.model";
+import { extractFromStorage, storageDispatch } from "./storage";
+import { STORAGE_KEY } from "@/models/storage.entity";
 
-export function createEmptyPool(): GroupType {
-  const storage = extractFromStorage();
+export function selectGroups(...groups: GroupType[]) {
+  const value = extractFromStorage();
 
-  const value: GroupType = {
-    id: generateRandomID(),
-    name: "Untitled",
-    cards: [],
-  };
+  value.simulator.groups = [
+    ...value.simulator.groups,
+    ...groups.filter((each) => !value.simulator.groups.includes(each)),
+  ];
 
-  storage.groups.push(value);
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
-
-  storageDispatch();
-
-  return value;
-}
-
-export function deletePool(id: GroupType["id"]): void {
-  const storage = extractFromStorage();
-
-  const index = storage.groups.findIndex((p) => p.id === id);
-
-  if (index === -1) {
-    console.error(`Internal Error: Pool '${id}' was not found!`);
-
-    return;
-  }
-
-  storage.groups.splice(index, 1);
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(value));
 
   storageDispatch();
 }
 
-export function updatePool(pool: GroupType): void {
-  const storage = extractFromStorage();
+export function unselectGroups(...groups: GroupType[]) {
+  const value = extractFromStorage();
 
-  const index = storage.groups.findIndex((p) => p.id === pool.id);
+  value.simulator.groups = value.simulator.groups.filter(
+    (each) => !groups.some((group) => group.id === each.id)
+  );
 
-  if (index === -1) {
-    console.error(`Internal Error: Pool '${pool.id}' was not found!`);
-
-    return;
-  }
-
-  storage.groups[index] = pool;
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(value));
 
   storageDispatch();
 }

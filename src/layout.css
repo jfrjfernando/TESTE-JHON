@@ -1,6 +1,16 @@
 main {
-  max-width: 1440px;
+  max-width: 1086px;
   margin: auto;
+  padding: 0 15px;
+}
+
+body {
+  background: #080106;
+  overflow-x: hidden;
+
+  font-family: "Jersey 15", serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 .pixelated-font {
@@ -30,5 +40,41 @@ main {
   }
   100% {
     box-shadow: 0 0 10px 5px rgba(162, 0, 255, 0.5);
+  }
+}
+
+@keyframes saturationAnimation {
+  0% {
+    filter: saturate(0.5);
+    transform: scale(1);
+    transform-origin: center;
+  }
+  50% {
+    filter: saturate(0.9);
+    transform: scale(1.02);
+    transform-origin: center;
+  }
+  100% {
+    filter: saturate(0.5);
+    transform: scale(1);
+    transform-origin: center;
+  }
+}
+
+@keyframes saturationAnimation2 {
+  0% {
+    filter: saturate(0.5) sepia(1px);
+    transform: scale(1);
+    transform-origin: center;
+  }
+  50% {
+    filter: saturate(0.2) sepia(1px);
+    transform: scale(1.02);
+    transform-origin: center;
+  }
+  100% {
+    filter: saturate(0.5) sepia(1px);
+    transform: scale(1);
+    transform-origin: center;
   }
 }

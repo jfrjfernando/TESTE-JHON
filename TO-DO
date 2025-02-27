@@ -1,2 +1,7 @@
 Add equip cards to fusion with monsters
 Add card alignments
+Add scroll loading for search combobox
+
+
+Small:
+- Small "Card" components for stats (also clickable cards)

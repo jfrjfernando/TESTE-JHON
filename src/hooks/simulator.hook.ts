@@ -2,9 +2,9 @@ import { useCallback, useContext, useMemo } from "preact/hooks";
 import { PriorityType, SimulatorContext } from "../contexts/simulator.context";
 import { generateHand } from "../services/randomize";
 import { GroupType } from "../models/group.model";
-import { selectGroups, unselectGroups } from "../services/simulator";
 import { useStorage } from "./storage.hook";
 import { CardBaseType } from "@/models/card.model";
+import { unselectGroups } from "@/services/pool";
 
 export function useSimulator() {
   const { simulator } = useStorage();
@@ -130,11 +130,6 @@ export function useSimulator() {
     setHand(handClone);
   }, [hand, setHand]);
 
-  const selectPool = useCallback(
-    (pool: GroupType) => selectGroups(pool),
-    [selectGroups]
-  );
-
   const unselectPool = useCallback(
     (pool: GroupType) => {
       if (simulator.groups.length <= 1) {
@@ -153,7 +148,6 @@ export function useSimulator() {
     resetHand,
     selectHandCard,
     init,
-    selectPool,
     unselectPool,
     focusCard,
     focusCardIndex,

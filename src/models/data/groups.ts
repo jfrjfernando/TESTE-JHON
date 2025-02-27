@@ -29,8 +29,8 @@ export const DEFAULT_GROUPS: GroupType[] = [
 function createGroupGroups(): GroupType[] {
   return Object.values(CardGroupType)
     .map((group) => ({
-      id: `default-pool-${group.toLowerCase()}`,
-      name: group,
+      id: `default-pool-group-${fixLabel(group.toLowerCase())}`,
+      name: group + " Group",
       cards: ALL_CARDS.filter((card) => card.groups.includes(group)).map(
         (each) => each.id
       ),
@@ -41,7 +41,7 @@ function createGroupGroups(): GroupType[] {
 function createTypeGroup(): GroupType[] {
   return Object.values(Type)
     .map((type) => ({
-      id: `default-pool-${type.toLowerCase()}`,
+      id: `default-pool-card-group-${fixLabel(type.toLowerCase())}`,
       name: type,
       cards: ALL_CARDS.filter(
         (card) => (card as CardMonsterType)?.type === type
@@ -53,7 +53,7 @@ function createTypeGroup(): GroupType[] {
 function createCardTypeGroup(): GroupType[] {
   return Object.values(CardType)
     .map((cardType) => ({
-      id: `default-pool-${cardType.toLowerCase()}`,
+      id: `default-pool-type-${fixLabel(cardType.toLowerCase())}`,
       name: cardType,
       cards: ALL_CARDS.filter(
         (card) => (card as CardMonsterType).cardType === cardType
@@ -65,7 +65,7 @@ function createCardTypeGroup(): GroupType[] {
 function createGuardianTypeGroup(): GroupType[] {
   return Object.values(GuardianType)
     .map((type) => ({
-      id: `default-pool-${type.toLowerCase()}`,
+      id: `default-pool-guardian-${fixLabel(type.toLowerCase())}`,
       name: type,
       cards: ALL_CARDS.filter((card) =>
         (card as CardMonsterType)?.guardians?.includes(type)
@@ -140,4 +140,8 @@ function createPasswordLessGroup(): GroupType {
     name: "Passwordless",
     cards: ALL_CARDS.filter((card) => !card.password).map((each) => each.id),
   };
+}
+
+function fixLabel(label: string) {
+  return label.replace(" ", "");
 }

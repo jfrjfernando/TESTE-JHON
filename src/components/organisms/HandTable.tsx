@@ -1,5 +1,4 @@
 import { CardMonsterType, CardType } from "@/models/card.model";
-import { Card } from "../molecules/Card";
 import { useSimulator } from "@/hooks/simulator.hook";
 import { LongNumber } from "../molecules/LongNumber";
 import { appendAssetsAPIPath } from "@/utils/path";
@@ -9,6 +8,8 @@ import { PoolButton } from "../atoms/PoolButton";
 import { useFusion } from "@/hooks/fusion.hook";
 import { CardResult } from "../molecules/CardResult";
 import { CardStatsButton } from "../atoms/CardStatsButton";
+import { BackButton } from "../atoms/BackButton";
+import { Card } from "../molecules/Card";
 
 export function HandTable() {
   const { focusCardIndex, focusCard, setFocusCard, hand, selectHandCard } =
@@ -21,7 +22,6 @@ export function HandTable() {
       <div
         class={"z-10 flex flex-col gap-4 justify-center py-2 px-4"}
         style={{
-          // TODO: external
           background: `url(${appendAssetsAPIPath(
             "/images/assets/border_top.webp"
           )})`,
@@ -32,17 +32,19 @@ export function HandTable() {
         }}
       >
         <div className={"flex justify-between"}>
-          <div class={"flex gap-6"}>
+          <div class={"flex gap-4"}>
+            <BackButton />
             <PoolButton />
-            <CardStatsButton />
           </div>
-          <ResetButton />
+          <div class={"flex gap-4"}>
+            <CardStatsButton />
+            <ResetButton />
+          </div>
         </div>
       </div>
       <div
         className={"z-10 flex flex-col justify-between h-full items-center"}
         style={{
-          // TODO: external
           background: `url(${appendAssetsAPIPath(
             "/images/assets/background.webp"
           )})`,

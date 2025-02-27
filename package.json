@@ -10,11 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.6",
+    "@radix-ui/react-popover": "^1.1.6",
+    "@radix-ui/react-slot": "^1.1.2",
     "@tailwindcss/vite": "4.0.8",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
+    "cmdk": "^1.0.0",
     "lucide-react": "0.475.0",
     "preact": "10.25.4",
+    "preact-router": "^4.1.2",
+    "react-window": "^1.8.11",
     "tailwind-merge": "3.0.2",
     "tailwindcss": "4.0.8",
     "tailwindcss-animate": "1.0.7",
@@ -23,6 +29,7 @@
   "devDependencies": {
     "@preact/preset-vite": "2.10.1",
     "@types/node": "22.13.5",
+    "@types/react-window": "^1.8.8",
     "typescript": "5.7.2",
     "vite": "6.1.0"
   }

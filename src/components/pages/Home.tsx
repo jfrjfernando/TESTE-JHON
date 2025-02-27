@@ -1,9 +1,9 @@
-import { Simulator } from "../templates/Simulator";
+import { Groups } from "../templates/Groups";
 
 export function HomePage() {
   return (
-    <main>
-      <Simulator />
+    <main className={"!max-w-[960px]"}>
+      <Groups />
     </main>
   );
 }
