@@ -19,24 +19,12 @@ body {
   font-style: normal;
 }
 
-@keyframes cardShadowChange {
-  0% {
-    box-shadow: 0 0 10px 5px rgba(0, 255, 231, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 10px 7px rgba(0, 255, 231, 0.6);
-  }
-  100% {
-    box-shadow: 0 0 10px 5px rgba(0, 255, 231, 0.5);
-  }
-}
-
 @keyframes cardFusionShadowChange {
   0% {
     box-shadow: 0 0 10px 5px rgba(162, 0, 255, 0.5);
   }
   50% {
-    box-shadow: 0 0 10px 4px rgba(43, 0, 44, 0.6);
+    box-shadow: 0 0 10px 5px rgba(207, 0, 211, 0.918);
   }
   100% {
     box-shadow: 0 0 10px 5px rgba(162, 0, 255, 0.5);

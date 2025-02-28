@@ -38,6 +38,7 @@ export function NumberFont({
       height={height}
       style={{
         imageRendering: "pixelated",
+        ...(props?.style ? (props.style as any) : {}),
       }}
     />
   );

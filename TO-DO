@@ -4,4 +4,5 @@ Add scroll loading for search combobox
 
 
 Small:
-- Small "Card" components for stats (also clickable cards)
+- Add gamepad API for inputs
+- Add footer

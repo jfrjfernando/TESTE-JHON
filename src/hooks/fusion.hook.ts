@@ -15,7 +15,7 @@ export function useFusion() {
     reset,
   } = useContext(FusionContext);
 
-  const { animate, clearCards } = useFusionAnimate();
+  const { animate, moveOutUsedCards, clearCards } = useFusionAnimate();
 
   const { queueCards, hand, init } = useSimulator();
 
@@ -47,6 +47,15 @@ export function useFusion() {
       for (let i = 0; i < queue.length; i++) {
         const response = queue[i];
         let target = queueCards[queueCardsIndex++];
+
+        moveOutUsedCards(
+          hand
+            .map((each, index) => ({
+              ...each,
+              index,
+            }))
+            .filter((each) => !each.priority)
+        );
 
         cardsElements.push(
           ...(await animate(

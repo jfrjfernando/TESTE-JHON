@@ -8,7 +8,8 @@ import { unselectGroups } from "@/services/pool";
 
 export function useSimulator() {
   const { simulator } = useStorage();
-  const { hand, setHand, cards, setCards } = useContext(SimulatorContext);
+  const { hand, setHand, cards, setCards, speed, setSpeed } =
+    useContext(SimulatorContext);
   const queueCards = useMemo<
     (CardBaseType & {
       index: number;
@@ -72,7 +73,7 @@ export function useSimulator() {
     if (find < 0) {
       setFocusCard(0);
 
-      return hand[0];
+      return 0;
     }
 
     return find;
@@ -142,6 +143,8 @@ export function useSimulator() {
     [unselectGroups, simulator]
   );
 
+  const toggleSpeed = useCallback(() => setSpeed(speed === 1 ? 3 : 1), [speed]);
+
   return {
     hand,
     setCards,
@@ -153,5 +156,8 @@ export function useSimulator() {
     focusCardIndex,
     setFocusCard,
     queueCards,
+    speed,
+    setSpeed,
+    toggleSpeed,
   };
 }

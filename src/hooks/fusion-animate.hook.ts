@@ -1,8 +1,30 @@
 import { GET_CARD_ELEMENT } from "@/components/molecules/Card";
 import { CardBaseType } from "@/models/card.model";
 import { useCallback } from "preact/hooks";
+import { useSimulator } from "./simulator.hook";
 
 export function useFusionAnimate() {
+  const { speed } = useSimulator();
+
+  const getTime = useCallback((ticks: number) => ticks / (speed ?? 1), [speed]);
+
+  const moveOutUsedCards = useCallback(
+    (unusedCards: (CardBaseType & { index: number })[]) => {
+      const elements = unusedCards.map((each) =>
+        document.getElementById(GET_CARD_ELEMENT(each.id, each.index))
+      );
+
+      elements.forEach((each) => {
+        if (each) {
+          each.style.opacity = "0";
+        }
+      });
+
+      return elements;
+    },
+    []
+  );
+
   const animate = useCallback(
     (
       source: CardBaseType & { index: number },
@@ -56,7 +78,7 @@ export function useFusionAnimate() {
         let counter = 0;
 
         function startAnimation() {
-          if (counter < 80) {
+          if (counter < getTime(80)) {
             counter += 1;
             requestAnimationFrame(startAnimation);
           } else {
@@ -74,7 +96,7 @@ export function useFusionAnimate() {
         let progression = 0;
 
         function positiveAnimation() {
-          if (progression < 260) {
+          if (progression < getTime(260)) {
             progression += 3;
 
             cardSource!.style.boxShadow = "0 0 10px 5px green";
@@ -87,7 +109,7 @@ export function useFusionAnimate() {
         }
 
         function negativeAnimation() {
-          if (progression < 220) {
+          if (progression < getTime(220)) {
             progression += 3;
 
             cardSource!.style.filter = `sepia(${progression / 100})`;
@@ -105,7 +127,7 @@ export function useFusionAnimate() {
         let delay = 0;
 
         function delayShowCardAnimation() {
-          if (delay < 40) {
+          if (delay < getTime(40)) {
             delay += 1;
 
             requestAnimationFrame(negativeAnimation);
@@ -119,7 +141,7 @@ export function useFusionAnimate() {
 
         function vanishCardsAnimation() {
           if (opacity > 0) {
-            opacity -= 6;
+            opacity -= 6 * (speed ?? 1);
 
             if (firstAnimation) {
               cardSource!.style.opacity = `${opacity}%`;
@@ -139,7 +161,7 @@ export function useFusionAnimate() {
         startAnimation();
       });
     },
-    []
+    [speed]
   );
 
   /**
@@ -152,5 +174,5 @@ export function useFusionAnimate() {
     });
   }, []);
 
-  return { animate, clearCards };
+  return { animate, clearCards, moveOutUsedCards };
 }

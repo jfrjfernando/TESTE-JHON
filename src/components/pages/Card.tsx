@@ -1,10 +1,10 @@
-import { CardBaseType } from "@/models/card.model";
 import { findCardById, findCardByName } from "@/services/finder";
 import { useRouter } from "preact-router";
-import { useEffect, useState } from "preact/hooks";
+import { useMemo } from "preact/hooks";
 import { StatsContent } from "../atoms/CardStatsButton";
 import { Dialog } from "../ui/dialog";
 import { appendAssetsAPIPath } from "@/utils/path";
+import { NotFound } from "../atoms/NotFound";
 
 export function CardPage() {
   const [
@@ -14,9 +14,7 @@ export function CardPage() {
     },
   ] = useRouter() as any;
 
-  const [card, setCard] = useState<CardBaseType>();
-
-  useEffect(() => {
+  const card = useMemo(() => {
     let findCard = findCardById(id);
 
     if (!findCard) {
@@ -25,14 +23,14 @@ export function CardPage() {
 
     if (!findCard) {
       // Card not exists!
-      return;
+      return null;
     }
 
-    setCard(findCard);
-  }, [id]);
+    return findCard;
+  }, [findCardById, id]);
 
   if (!card) {
-    return <></>;
+    return <NotFound />;
   }
 
   return (

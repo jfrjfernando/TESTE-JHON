@@ -12,7 +12,7 @@ export function Logo({ size }: { size: number }) {
     >
       <a href={appendUrlPath("/")} aria-label="Home button">
         <img
-          src={"/images/logo.webp"}
+          src={appendUrlPath("/images/logo.webp")}
           width={size * 1.35}
           alt={"App logo"}
           style={{

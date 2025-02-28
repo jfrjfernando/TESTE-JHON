@@ -3,19 +3,29 @@ import { Card as UICard, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Edit3, Trash } from "lucide-react";
-import { deleteGroup, updateGroup } from "@/services/group";
+import {
+  addGroupCards,
+  deleteGroup,
+  removeGroupCards,
+  updateGroup,
+} from "@/services/group";
 import { GroupType } from "@/models/group.model";
-import { findCardById } from "@/services/finder";
+import { findCardById, findCardByName } from "@/services/finder";
 import { IdType } from "@/models/card.model";
 import { MiniCard } from "../molecules/MiniCard";
 import { Switch } from "../atoms/Switch";
 import { selectGroups, unselectGroups } from "@/services/pool";
 import { useStorage } from "@/hooks/storage.hook";
 import { useRouter } from "preact-router";
-import { appendUrlPath } from "@/utils/path";
+import { AddCardButton } from "../molecules/AddCardButton";
 import { cn } from "@/lib/utils";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "../ui/hover-card";
 
-export function Group({
+export function GroupFull({
   group,
 }: {
   group: GroupType & {
@@ -28,17 +38,6 @@ export function Group({
   const allCards = useMemo(
     () => cards.map((id) => findCardById(id as IdType)!),
     [cards]
-  );
-
-  const showCards = 22;
-
-  const otherCards = useMemo(() => allCards.length - showCards, [allCards]);
-
-  const reducedView = useMemo(() => otherCards > 0, [otherCards]);
-
-  const viewCards = useMemo(
-    () => (reducedView ? allCards.slice(0, showCards - 1) : allCards),
-    [allCards, reducedView]
   );
 
   const {
@@ -82,19 +81,20 @@ export function Group({
               className={"w-fit"}
             />
           ) : (
-            <a
-              href={appendUrlPath(`/groups/${id}`)}
-              className={
-                "text-xl uppercase hover:text-amber-200 transition-all hover:underline"
-              }
-            >
+            <p className={"text-xl uppercase"}>
               {name} ({allCards.length})
-            </a>
+            </p>
           )}
           {editable && (
             <div className={"flex gap-1"}>
               <Button
                 variant={"outline"}
+                aria-label={"Edit name"}
+                className={cn(
+                  edit &&
+                    ((newName?.length ?? 0) > 0 ? "bg-green-800" : "bg-red-800")
+                )}
+                disabled={(newName?.length ?? 0) <= 0}
                 onClick={() => {
                   if (edit) {
                     updateGroup({
@@ -106,12 +106,6 @@ export function Group({
                     setEdit(true);
                   }
                 }}
-                aria-label={"Edit name"}
-                className={cn(
-                  edit &&
-                    ((newName?.length ?? 0) > 0 ? "bg-green-800" : "bg-red-800")
-                )}
-                disabled={(newName?.length ?? 0) <= 0}
               >
                 <Edit3 />
               </Button>
@@ -139,24 +133,46 @@ export function Group({
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent
-        className={
-          "grid grid-cols-11 gap-2 max-[1040px]:grid-cols-10 max-[970px]:grid-cols-9 max-[785px]:grid-cols-8 max-[700px]:grid-cols-7 max-[615px]:grid-cols-6 max-[530px]:grid-cols-5 max-[451px]:grid-cols-4 max-[380px]:grid-cols-3 max-[305px]:grid-cols-2 max-[234px]:grid-cols-1 m-auto"
-        }
-      >
-        {viewCards.map((each, index) => (
-          <MiniCard key={`${each}-${index}`} {...each} />
-        ))}
-        {reducedView && (
-          <a href={appendUrlPath(`/groups/${id}`)}>
-            <div
-              className={
-                "flex bg-slate-600 h-[90px] w-[72px] text-3xl border rounded-sm hover:text-yellow-600 hover:bg-slate-700 hover:scale-[1.05] transition-all cursor-pointer"
+      <CardContent className={"flex flex-wrap gap-2 w-fit"}>
+        {allCards.map((each, index) => {
+          const element = <MiniCard key={`${each}-${index}`} {...each} />;
+
+          if (editable) {
+            return (
+              <HoverCard openDelay={300}>
+                <HoverCardTrigger>
+                  <div>{element}</div>
+                </HoverCardTrigger>
+                <HoverCardContent className={"w-fit bg-card"}>
+                  <Button
+                    variant={"destructive"}
+                    onClick={() => {
+                      removeGroupCards(group.id, each);
+                    }}
+                  >
+                    <Trash />
+                  </Button>
+                </HoverCardContent>
+              </HoverCard>
+            );
+          }
+
+          return element;
+        })}
+        {editable ? (
+          <AddCardButton
+            onAdd={(name) => {
+              const card = findCardByName(name);
+
+              if (!card) {
+                return;
               }
-            >
-              <p className={"m-auto"}>+{otherCards + 1}</p>
-            </div>
-          </a>
+
+              addGroupCards(group.id, card);
+            }}
+          />
+        ) : (
+          <></>
         )}
       </CardContent>
     </UICard>

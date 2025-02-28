@@ -1,3 +1,4 @@
+import { CardBaseType } from "@/models/card.model";
 import { GroupType } from "../models/group.model";
 import { STORAGE_KEY } from "../models/storage.entity";
 import { generateRandomID } from "../utils/uid";
@@ -27,7 +28,7 @@ export function deleteGroup(id: GroupType["id"]): void {
   const index = storage.groups.findIndex((p) => p.id === id);
 
   if (index === -1) {
-    console.error(`Internal Error: Pool '${id}' was not found!`);
+    console.error(`Internal Error: Group '${id}' was not found!`);
 
     return;
   }
@@ -47,7 +48,7 @@ export function updateGroup({
   const index = storage.groups.findIndex((p) => p.id === props.id);
 
   if (index === -1) {
-    console.error(`Internal Error: Pool '${props.id}' was not found!`);
+    console.error(`Internal Error: Group '${props.id}' was not found!`);
 
     return;
   }
@@ -55,6 +56,56 @@ export function updateGroup({
   storage.groups[index] = {
     ...storage.groups[index],
     ...props,
+  };
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
+
+  storageDispatch();
+}
+
+export function addGroupCards(
+  groupId: GroupType["id"],
+  ...cards: CardBaseType[]
+) {
+  const storage = extractFromStorage();
+
+  const index = storage.groups.findIndex((p) => p.id === groupId);
+
+  if (index === -1) {
+    console.error(`Internal Error: Group '${groupId}' was not found!`);
+
+    return;
+  }
+
+  storage.groups[index] = {
+    ...storage.groups[index],
+    cards: [...storage.groups[index].cards, ...cards.map((each) => each.id)],
+  };
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
+
+  storageDispatch();
+}
+
+export function removeGroupCards(
+  groupId: GroupType["id"],
+  ...cards: CardBaseType[]
+) {
+  const storage = extractFromStorage();
+
+  const index = storage.groups.findIndex((p) => p.id === groupId);
+
+  if (index === -1) {
+    console.error(`Internal Error: Group '${groupId}' was not found!`);
+
+    return;
+  }
+
+  storage.groups[index] = {
+    ...storage.groups[index],
+    cards: storage.groups[index].cards.filter(
+      (each) => !cards.some((card) => card.id === each)
+    ),
   };
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));

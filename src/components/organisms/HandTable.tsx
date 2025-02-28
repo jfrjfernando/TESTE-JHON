@@ -10,6 +10,8 @@ import { CardResult } from "../molecules/CardResult";
 import { CardStatsButton } from "../atoms/CardStatsButton";
 import { BackButton } from "../atoms/BackButton";
 import { Card } from "../molecules/Card";
+import { SpeedButton } from "../atoms/SpeedButton";
+import { FusionResults } from "../atoms/FusionResults";
 
 export function HandTable() {
   const { focusCardIndex, focusCard, setFocusCard, hand, selectHandCard } =
@@ -35,6 +37,7 @@ export function HandTable() {
           <div class={"flex gap-4"}>
             <BackButton />
             <PoolButton />
+            <SpeedButton />
           </div>
           <div class={"flex gap-4"}>
             <CardStatsButton />
@@ -61,12 +64,14 @@ export function HandTable() {
             }
           />
         )}
-        <div class={"flex flex-col gap-4 justify-end h-full pb-2"}>
-          <div class={"flex justify-center items-center mb-2"}>
+        <div class={"relative flex flex-col gap-4 justify-end h-full pb-2"}>
+          <div class={"flex flex-col gap-6 justify-center items-center mb-2"}>
             <CardResult />
+            <FusionResults />
           </div>
-          <FuseButton />
         </div>
+        <FuseButton />
+
         {/* Hand table */}
         <div class={"w-full m-auto flex flex-col content-end justify-end"}>
           <div className={"relative"}>

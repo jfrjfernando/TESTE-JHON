@@ -1,3 +1,7 @@
+/**
+ * This component was created to solve the problem with Dialogs (radix)
+ */
+
 import { cn } from "@/lib/utils";
 import { appendAssetsAPIPath } from "@/utils/path";
 import {
@@ -6,14 +10,14 @@ import {
   useState,
 } from "preact/compat";
 
-export function Button({
+export function DivButton({
   children,
   ...props
-}: PropsWithChildren<ButtonHTMLAttributes<HTMLButtonElement>>) {
+}: PropsWithChildren<ButtonHTMLAttributes<HTMLDivElement>>) {
   const [isHover, setHover] = useState<boolean>(false);
 
   return (
-    <button
+    <div
       {...props}
       className={cn(
         "relative px-6 py-3 text-4xl border-2 border-gray-900 text-slate-200 rounded-lg cursor-pointer shadow-md shadow-black hover:shadow-orange-300 hover:shadow-md hover:text-orange-200 active:shadow active:text-orange-300 disabled:text-gray-500 disabled:shadow-black disabled:shadow-sm transition-all disabled:cursor-not-allowed",
@@ -42,7 +46,7 @@ export function Button({
           background: props.disabled ? "black" : undefined,
         }}
       ></span>
-      <div className={"z-40 relative"}>{children}</div>
-    </button>
+      <div className={"z-50 relative"}>{children}</div>
+    </div>
   );
 }

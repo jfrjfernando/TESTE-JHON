@@ -35,6 +35,16 @@ export type SimulatorContextType = {
    * Set new cards
    */
   setCards: (cards: CardBaseType[]) => void;
+
+  /**
+   * Animations speed
+   */
+  speed?: 1 | 2 | 3 | 4 | 5;
+
+  /**
+   * Animations speed
+   */
+  setSpeed: (speed: 1 | 2 | 3 | 4 | 5) => void;
 };
 
 export const SimulatorContext = createContext<SimulatorContextType>({
@@ -42,4 +52,5 @@ export const SimulatorContext = createContext<SimulatorContextType>({
   setHand: () => {},
   cards: [],
   setCards: () => {},
+  setSpeed: () => {},
 });

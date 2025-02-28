@@ -14,24 +14,23 @@ import { DrawFusion } from "./DrawFusion";
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import { findCardById } from "@/services/finder";
 import { cn } from "@/lib/utils";
-import { Button } from "./Button";
 import { Card } from "../molecules/Card";
-import { FixedSizeGrid, FixedSizeList } from "react-window";
-import { useWindowSize } from "@/hooks/window.hook";
+import { FixedSizeGrid } from "react-window";
 import { LoadingSpinner } from "./LoadingSpinner";
+import { DivButton } from "./DivButton";
 
 export function CardStatsButton() {
   const { focusCard } = useSimulator();
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button
+      <DialogTrigger>
+        <DivButton
           disabled={!focusCard}
           className={"shadow-xl cursor-pointer group hover:shadow-md m-auto"}
         >
           STATS
-        </Button>
+        </DivButton>
       </DialogTrigger>
       <DialogContent
         className={"h-[90vh] max-w-[825px] w-full pb-2 pt-3 overflow-y-auto"}
@@ -126,7 +125,7 @@ export function StatsContent({
       </DialogHeader>
       <div className={"flex gap-4 mt-4 h-fit"}>
         <div className={"h-fit"}>
-          <Card {...focusCard} index={-2} priority={undefined} />
+          <Card {...focusCard} index={-2} priority={undefined} focus={false} />
           <div className={"flex gap-1 justify-center mt-1 items-center"}>
             {focusCard.cardType === CardType.MONSTER ? (
               <>
@@ -251,17 +250,17 @@ function AvailableFusions({
     return () => observer.disconnect();
   }, []);
 
-  const { width, columns, columnMode } = useMemo(() => {
+  const width = useMemo(() => containerWidth - 30, [containerWidth]);
+
+  const { columns, columnMode } = useMemo(() => {
     if (!containerWidth) {
       return {
-        width: 940,
         columns: 3,
       };
     }
 
     if (containerWidth < 254) {
       return {
-        width: 100,
         columns: 1,
         columnMode: true,
       };
@@ -269,7 +268,6 @@ function AvailableFusions({
 
     if (containerWidth < 365) {
       return {
-        width: 200,
         columns: 2,
         columnMode: true,
       };
@@ -277,20 +275,17 @@ function AvailableFusions({
 
     if (containerWidth < 645) {
       return {
-        width: 320,
         columns: 1,
       };
     }
 
     if (containerWidth < 920) {
       return {
-        width: 620,
         columns: 2,
       };
     }
 
     return {
-      width: 900,
       columns: 3,
     };
   }, [containerWidth]);

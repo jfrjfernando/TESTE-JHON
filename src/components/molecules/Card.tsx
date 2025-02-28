@@ -1,5 +1,5 @@
 import { CardBaseType, CardType, IdType } from "@/models/card.model";
-import { appendAssetsAPIPath } from "@/utils/path";
+import { appendAssetsAPIPath, appendUrlPath } from "@/utils/path";
 import { LongNumber } from "./LongNumber";
 import { useFusion } from "@/hooks/fusion.hook";
 import { cn } from "@/lib/utils";
@@ -43,7 +43,7 @@ export function Card({
   cardType,
   attack,
   defense,
-  focus: _,
+  focus,
   onClick,
   onHover,
   priority,
@@ -65,9 +65,6 @@ export function Card({
         pointerEvents: !onClick ? "none" : undefined,
         userSelect: "none",
         transform: !fusing && priority ? "translate(0, -8%)" : undefined,
-        // TODO: Add an array gif like in the game
-        // animation:
-        //   !fusing && focus ? "cardShadowChange 2s infinite" : undefined,
         boxShadow: "none",
       }}
       onClick={() => !fusing && onClick?.()}
@@ -75,18 +72,18 @@ export function Card({
     >
       {!fusing && priority && (
         <div
-          className={"absolute z-50"}
+          className={"absolute z-40"}
           style={{
-            transform: "translate(-50%, -60%)",
-            left: "50%",
+            transform: "translate(-50%, 10%)",
+            left: "21px",
           }}
         >
           <div
             className={
-              "h-10 w-10 text-center bg-slate-500 text-3xl rounded-full border-2 border-slate-300 text-slate-300"
+              "h-7 w-11 text-center bg-gray-900 text-3xl rounded-sm border-2 border-white text-blue-300"
             }
           >
-            {priority}
+            <p className={"-translate-y-[5px]"}>{priority}</p>
           </div>
         </div>
       )}
@@ -149,6 +146,20 @@ export function Card({
         >
           <LongNumber numbers={defense} width={19} height={25} />
         </div>
+      )}
+
+      {focus && !fusing && (
+        <img
+          className={"relative z-30"}
+          src={appendUrlPath("/images/red_arrow.gif")}
+          width={40}
+          height={30}
+          alt={"Selected arrow"}
+          style={{
+            imageRendering: "pixelated",
+            transform: "translate(-28px, 110px)",
+          }}
+        />
       )}
     </div>
   );

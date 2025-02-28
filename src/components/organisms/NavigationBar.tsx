@@ -6,6 +6,8 @@ import { useRouter } from "preact-router";
 import { cn } from "@/lib/utils";
 import { AnchorHTMLAttributes } from "preact/compat";
 import { GithubIcon } from "lucide-react";
+import { padToThreeDigits } from "@/utils/strings";
+import ALL_CARDS from "@/models/data/cards";
 
 export function NavigationBar() {
   const [{ url }] = useRouter();
@@ -42,13 +44,18 @@ export function NavigationBar() {
         </div>
         <div class={"flex items-center justify-center gap-6 text-xl"}>
           <Link path={appendUrlPath("/")} text="home" />
+          <Link path={appendUrlPath("/pool")} text="pool" />
+          <Link path={appendUrlPath("/simulator")} text="simulator" />
           <Link
-            path="https://github.com/lukadevv/fusion-simulator/"
-            text="source code"
-            target={"_blank"}
+            path={appendUrlPath(
+              `/cards/${padToThreeDigits(
+                Math.floor(Math.random() * ALL_CARDS.length) + 1
+              )}`
+            )}
+            text="random card"
           />
           <Link
-            path="https://github.com/lukadevv/"
+            path="https://github.com/lukadevv/fusion-simulator/"
             text="github"
             icon={<GithubIcon size={"18px"} />}
             target={"_blank"}
@@ -77,8 +84,9 @@ function Link({
   return (
     <a
       className={cn(
-        "hover:text-orange-300 uppercase transition-all duration-150",
-        (selected || url.includes(path)) && "text-orange-300",
+        "hover:text-orange-300 uppercase transition-all duration-150 hover:underline",
+        (selected || path.length === 1 ? url === path : url.includes(path)) &&
+          "text-orange-300",
         icon && "flex gap-0.5 items-center"
       )}
       href={path}

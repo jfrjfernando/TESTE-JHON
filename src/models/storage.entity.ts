@@ -1,5 +1,5 @@
 import { array, InferType, object } from "yup";
-import { GroupModel } from "./group.model";
+import { GroupModel, GroupSelectedModel } from "./group.model";
 
 export type StorageEntityType = InferType<typeof StorageEntity>;
 
@@ -8,7 +8,7 @@ export const StorageEntity = object({
   groups: array().of(GroupModel.required()).required(),
   simulator: object({
     // Selected groups
-    groups: array().of(GroupModel.required()).required(),
+    groups: array().of(GroupSelectedModel.required()).required(),
   }).required(),
 }).required();
 
