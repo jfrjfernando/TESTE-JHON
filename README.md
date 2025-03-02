@@ -30,5 +30,12 @@ Yu-Gi-Oh! Fusion Simulator is a **fan-made project** and is **not affiliated wit
 
 For questions or feedback, contact me lukadevv@proton.me
 
- 
+## ❤️ Support My Work
+
+If you enjoy my projects and want to help support further development, feel free to donate! Every contribution, big or small, is greatly appreciated and helps me keep creating.
+
+### Donate via PayPal:
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate/?hosted_button_id=F4ZRZT3AUZ4MS)
+
 _Special thanks to @Tromboncino for the idea and to @Layoso._
