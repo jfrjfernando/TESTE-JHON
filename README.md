@@ -29,3 +29,6 @@ Yu-Gi-Oh! Fusion Simulator is a **fan-made project** and is **not affiliated wit
 ## 📧 Contact
 
 For questions or feedback, contact me lukadevv@proton.me
+
+ 
+_Special thanks to @Tromboncino for the idea and to @Layoso._
