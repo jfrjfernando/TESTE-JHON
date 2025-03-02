@@ -6,7 +6,7 @@ import { FuseButton } from "../atoms/FuseButton";
 import { ResetButton } from "../atoms/ResetButton";
 import { PoolButton } from "../atoms/PoolButton";
 import { useFusion } from "@/hooks/fusion.hook";
-import { CardResult } from "../molecules/CardResult";
+import { CardResult } from "../atoms/CardResult";
 import { CardStatsButton } from "../atoms/CardStatsButton";
 import { BackButton } from "../atoms/BackButton";
 import { Card } from "../molecules/Card";
@@ -22,7 +22,9 @@ export function HandTable() {
   return (
     <div class={"h-[100vh] flex flex-col pixelated-font"}>
       <div
-        class={"z-10 flex flex-col gap-4 justify-center py-2 px-4"}
+        class={
+          "z-10 flex flex-col gap-4 justify-center py-2 px-4 max-[424px]:py-0"
+        }
         style={{
           background: `url(${appendAssetsAPIPath(
             "/images/assets/border_top.webp"
@@ -33,15 +35,36 @@ export function HandTable() {
           imageRendering: "pixelated",
         }}
       >
-        <div className={"flex justify-between"}>
-          <div class={"flex gap-4"}>
-            <BackButton />
-            <PoolButton />
-            <SpeedButton />
+        <div
+          className={"flex justify-between items-center max-[424px]:flex-col"}
+        >
+          <div
+            class={"flex gap-4 max-[424px]:justify-between max-[424px]:w-full"}
+          >
+            <BackButton className={"w-min max-[718px]:px-3 max-[718px]:h-13"} />
+            <PoolButton
+              className={
+                "w-min max-[718px]:px-3 max-[718px]:h-13 max-[718px]:text-2xl py-0.5"
+              }
+            />
+            <SpeedButton
+              className={"w-min max-[718px]:px-3 max-[718px]:h-13"}
+              iconClassName={"size-8"}
+            />
           </div>
-          <div class={"flex gap-4"}>
-            <CardStatsButton />
-            <ResetButton />
+          <div
+            class={"flex gap-4 max-[424px]:justify-evenly max-[424px]:w-full"}
+          >
+            <CardStatsButton
+              className={
+                "w-min max-[718px]:px-3 max-[718px]:h-13 max-[718px]:text-2xl py-0.5"
+              }
+            />
+            <ResetButton
+              className={
+                "w-min max-[718px]:px-3 max-[718px]:h-13 max-[718px]:text-2xl py-0.5"
+              }
+            />
           </div>
         </div>
       </div>
@@ -73,11 +96,19 @@ export function HandTable() {
         <FuseButton />
 
         {/* Hand table */}
-        <div class={"w-full m-auto flex flex-col content-end justify-end"}>
-          <div className={"relative"}>
+        <div
+          class={
+            "w-full m-auto flex flex-col content-end justify-end table-cards-scroll"
+          }
+        >
+          <div
+            className={
+              "relative max-[639px]:pb-8 max-[639px]:overflow-x-scroll scroll max-[639px]:w-full max-[639px]:overflow-y-hidden max-[639px]:m-auto"
+            }
+          >
             <div
               className={
-                "flex gap-9 flex-wrap justify-center -translate-y-2 min-[770px]:translate-y-12 min-[450px]:translate-y-6"
+                "max-[639px]:w-fit flex gap-9 max-[790px]:gap-5 max-[695px]:gap-2 justify-center -translate-y-2 min-[770px]:translate-y-12 min-[450px]:translate-y-6 max-[450px]:translate-y-7"
               }
             >
               {hand.map((each, index) => (
@@ -108,7 +139,9 @@ export function HandTable() {
                   <div class={"flex flex-col gap-1"}>
                     <div className={"flex justify-between"}>
                       <div class={"flex gap-2 overflow-hidden"}>
-                        <p className={"text-3xl text-red-300"}>
+                        <p
+                          className={"text-3xl text-red-300 max-[341px]:hidden"}
+                        >
                           {focusCard.id}
                         </p>
                         <p className={"text-3xl text-slate-300 text-nowrap"}>
@@ -118,7 +151,11 @@ export function HandTable() {
                       <div className={"flex gap-1"}>
                         {focusCard.cardType === CardType.MONSTER ? (
                           <>
-                            <div className={"flex flex-col gap-1"}>
+                            <div
+                              className={
+                                "flex flex-col gap-1 max-[460px]:hidden"
+                              }
+                            >
                               <div className={"flex gap-2"}>
                                 <img
                                   src={appendAssetsAPIPath(
@@ -132,6 +169,7 @@ export function HandTable() {
                                   }}
                                 />
                                 <LongNumber
+                                  hiddenNumbers
                                   numbers={
                                     (focusCard as CardMonsterType).attack
                                   }
@@ -152,6 +190,7 @@ export function HandTable() {
                                   }}
                                 />
                                 <LongNumber
+                                  hiddenNumbers
                                   numbers={
                                     (focusCard as CardMonsterType).defense
                                   }
@@ -190,6 +229,7 @@ export function HandTable() {
                                 style={{
                                   imageRendering: "pixelated",
                                 }}
+                                className={"max-[365px]:hidden"}
                               />
                               <img
                                 src={appendAssetsAPIPath(
@@ -203,6 +243,7 @@ export function HandTable() {
                                 style={{
                                   imageRendering: "pixelated",
                                 }}
+                                className={"max-[365px]:hidden"}
                               />
                             </div>
                           </>

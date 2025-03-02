@@ -1,15 +1,16 @@
 import { useEffect } from "preact/hooks";
 
 export function useInput(
-  inputs: {
+  binds: {
     keys: string[];
     action: () => void;
   }[],
   targetElementId?: HTMLDivElement["id"]
 ) {
   useEffect(() => {
+    // Keyboard
     const handleKeyDown = (event: KeyboardEvent) => {
-      const input = inputs.find((input) => input.keys.includes(event.code));
+      const input = binds.find((input) => input.keys.includes(event.code));
 
       if (input) {
         event.preventDefault();
@@ -27,5 +28,5 @@ export function useInput(
         : document
       ).removeEventListener("keydown", handleKeyDown as EventListener);
     };
-  }, [inputs]);
+  }, [binds]);
 }

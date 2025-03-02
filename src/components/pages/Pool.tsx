@@ -1,25 +1,28 @@
 import { useStorage } from "@/hooks/storage.hook";
 import { CardBaseType, IdType } from "@/models/card.model";
-import { DEFAULT_GROUPS } from "@/models/data/groups";
-import { findCardById } from "@/services/finder";
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import { Pool } from "../molecules/Pool";
 import { FixedSizeGrid } from "react-window";
 import { MiniCard } from "../molecules/MiniCard";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { useWindowScrollbarSize } from "@/hooks/window.hook";
+import { useData } from "@/hooks/data.hook";
+import { useCards } from "@/hooks/cards.hook";
 
 export function PoolPage() {
   const { groups, simulator } = useStorage();
+  const { groups: defaultGroups } = useData();
+  const { findCardById } = useCards();
 
   const allGroups = useMemo(
     () =>
-      [...groups, ...DEFAULT_GROUPS].map((each) => ({
+      [...groups, ...defaultGroups].map((each) => ({
         ...each,
         cards: each.cards
           .map((card) => findCardById(card as IdType))
           .filter((each) => !!each),
       })),
-    [groups, DEFAULT_GROUPS]
+    [groups, defaultGroups]
   );
 
   const cards = useMemo(
@@ -112,6 +115,8 @@ export function PoolPage() {
   const height = 500;
   const columnMode = false;
 
+  const scrollBarWidth = useWindowScrollbarSize();
+
   return (
     <main className={"!max-w-[960px]"}>
       <div ref={ref} className={"flex flex-col gap-4"}>
@@ -129,7 +134,7 @@ export function PoolPage() {
               rowHeight={94}
               columnCount={columns}
               rowCount={Math.ceil(cards.length / columns)}
-              width={width + 18}
+              width={width + scrollBarWidth}
               style={{
                 overflowY: "scroll",
               }}

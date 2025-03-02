@@ -22,6 +22,18 @@ export function createEmptyGroup(): GroupType {
   return value;
 }
 
+export function createGroup(group: GroupType): GroupType {
+  const storage = extractFromStorage();
+
+  storage.groups.push(group);
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
+
+  storageDispatch();
+
+  return group;
+}
+
 export function deleteGroup(id: GroupType["id"]): void {
   const storage = extractFromStorage();
 
@@ -103,9 +115,25 @@ export function removeGroupCards(
 
   storage.groups[index] = {
     ...storage.groups[index],
-    cards: storage.groups[index].cards.filter(
-      (each) => !cards.some((card) => card.id === each)
-    ),
+    cards: storage.groups[index].cards.reduce(
+      (result, each) => {
+        const foundIndex = result.toRemove.findIndex(
+          (card) => card.id === each
+        );
+
+        if (foundIndex !== -1) {
+          result.toRemove.splice(foundIndex, 1);
+          return result;
+        }
+
+        result.array.push(each);
+        return result;
+      },
+      {
+        array: [] as string[],
+        toRemove: [...cards],
+      }
+    ).array,
   };
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));

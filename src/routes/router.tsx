@@ -20,7 +20,13 @@ export function Routes() {
   return (
     <>
       {loading && <LoadingOverlay />}
-      <Router onChange={handleRouteChange}>
+      <Router
+        onChange={(e) => {
+          if (e.previous) {
+            handleRouteChange();
+          }
+        }}
+      >
         <Route component={HomePage} path={appendUrlPath("/")} />
         <Route component={SimulatorPage} path={appendUrlPath("/simulator")} />
         <Route component={CardPage} path={appendUrlPath("/cards/:id")} />

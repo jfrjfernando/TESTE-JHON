@@ -163,6 +163,11 @@ export type CardMonsterType = CardBaseType & {
    * Guardians of the card
    */
   guardians: [GuardianType, GuardianType];
+
+  /**
+   * Card equips
+   */
+  equips?: CardBaseType["id"][];
 };
 
 export const MAX_HAND_CARDS = 5;

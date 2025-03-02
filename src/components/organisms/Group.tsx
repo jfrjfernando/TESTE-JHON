@@ -2,10 +2,9 @@ import { useCallback, useMemo, useState } from "preact/hooks";
 import { Card as UICard, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Edit3, Trash } from "lucide-react";
-import { deleteGroup, updateGroup } from "@/services/group";
+import { Download, Edit3 } from "lucide-react";
+import { updateGroup } from "@/services/group";
 import { GroupType } from "@/models/group.model";
-import { findCardById } from "@/services/finder";
 import { IdType } from "@/models/card.model";
 import { MiniCard } from "../molecules/MiniCard";
 import { Switch } from "../atoms/Switch";
@@ -14,6 +13,9 @@ import { useStorage } from "@/hooks/storage.hook";
 import { useRouter } from "preact-router";
 import { appendUrlPath } from "@/utils/path";
 import { cn } from "@/lib/utils";
+import { GroupExportButton } from "../atoms/GroupExportButton";
+import { GroupDeleteButton } from "../atoms/GroupDeleteButton";
+import { useCards } from "@/hooks/cards.hook";
 
 export function Group({
   group,
@@ -23,6 +25,7 @@ export function Group({
   };
 }) {
   const { id, name, cards, editable } = group;
+  const { findCardById } = useCards();
 
   const [edit, setEdit] = useState(false);
   const allCards = useMemo(
@@ -68,12 +71,17 @@ export function Group({
   const [newName, setNewName] = useState<string>(group.name);
 
   return (
-    <UICard className={selected ? "bg-card border-amber-200" : "bg-background"}>
+    <UICard
+      className={
+        selected ? "bg-card border-active box-shadow-accent" : "bg-background"
+      }
+    >
       <CardHeader>
         <CardTitle
-          className={
-            "relative flex items-center gap-4 border-b-2 pb-4 animate-in animate-bounce font-light"
-          }
+          className={cn(
+            "relative flex items-center gap-4 border-b-2 pb-4 animate-in animate-bounce font-light max-[435px]:flex-col",
+            selected && "border-active"
+          )}
         >
           {edit ? (
             <Input
@@ -85,7 +93,7 @@ export function Group({
             <a
               href={appendUrlPath(`/groups/${id}`)}
               className={
-                "text-xl uppercase hover:text-amber-200 transition-all hover:underline"
+                "text-xl uppercase hover:text-active transition-all hover:underline"
               }
             >
               {name} ({allCards.length})
@@ -115,17 +123,18 @@ export function Group({
               >
                 <Edit3 />
               </Button>
-              <Button
-                variant={"outline"}
-                onClick={() => deleteGroup(id)}
-                aria-label={"Remove group"}
-              >
-                <Trash />
-              </Button>
+              <GroupExportButton group={group}>
+                <Button variant={"outline"} aria-label={"Export group"}>
+                  <Download />
+                </Button>
+              </GroupExportButton>
+              <GroupDeleteButton {...group} />
             </div>
           )}
           <div
-            class={"absolute"}
+            className={
+              "absolute transform max-[331px]:translate-x-[100%] max-[331px]:static max-[331px]:translate-y-[120%]"
+            }
             style={{
               left: "100%",
               transform: "translate(-100%,-100%)",

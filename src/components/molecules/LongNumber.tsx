@@ -7,11 +7,13 @@ export function LongNumber({
   width,
   height,
   props,
+  hiddenNumbers,
 }: {
   numbers: number;
   width?: number;
   height?: number;
   props?: React.HTMLProps<HTMLImageElement>;
+  hiddenNumbers?: boolean;
 }) {
   const stringNumbers = useMemo(() => String(numbers), [numbers]);
   const rest = useMemo(
@@ -27,6 +29,7 @@ export function LongNumber({
       )}
     >
       {rest > 0 &&
+        hiddenNumbers &&
         Array.from({ length: rest }).map(() => (
           <NumberFont
             number={0}
@@ -35,8 +38,8 @@ export function LongNumber({
             props={{
               ...props,
               style: {
-                opacity: "0"
-              }
+                opacity: "0",
+              },
             }}
           />
         ))}

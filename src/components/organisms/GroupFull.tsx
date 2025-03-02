@@ -2,15 +2,9 @@ import { useCallback, useMemo, useState } from "preact/hooks";
 import { Card as UICard, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Edit3, Trash } from "lucide-react";
-import {
-  addGroupCards,
-  deleteGroup,
-  removeGroupCards,
-  updateGroup,
-} from "@/services/group";
+import { Download, Edit3, Trash } from "lucide-react";
+import { addGroupCards, removeGroupCards, updateGroup } from "@/services/group";
 import { GroupType } from "@/models/group.model";
-import { findCardById, findCardByName } from "@/services/finder";
 import { IdType } from "@/models/card.model";
 import { MiniCard } from "../molecules/MiniCard";
 import { Switch } from "../atoms/Switch";
@@ -20,10 +14,14 @@ import { useRouter } from "preact-router";
 import { AddCardButton } from "../molecules/AddCardButton";
 import { cn } from "@/lib/utils";
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "../ui/hover-card";
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "../ui/context-menu";
+import { GroupExportButton } from "../atoms/GroupExportButton";
+import { GroupDeleteButton } from "../atoms/GroupDeleteButton";
+import { useCards } from "@/hooks/cards.hook";
 
 export function GroupFull({
   group,
@@ -33,6 +31,7 @@ export function GroupFull({
   };
 }) {
   const { id, name, cards, editable } = group;
+  const { findCardById, findCardByName } = useCards();
 
   const [edit, setEdit] = useState(false);
   const allCards = useMemo(
@@ -66,13 +65,20 @@ export function GroupFull({
 
   const [newName, setNewName] = useState<string>(group.name);
 
+  const findCard = useCallback((name: string) => findCardByName(name), []);
+
   return (
-    <UICard className={selected ? "bg-card border-amber-200" : "bg-background"}>
+    <UICard
+      className={
+        selected ? "bg-card border-active box-shadow-accent" : "bg-background"
+      }
+    >
       <CardHeader>
         <CardTitle
-          className={
-            "relative flex items-center gap-4 border-b-2 pb-4 animate-in animate-bounce font-light"
-          }
+          className={cn(
+            "relative flex items-center gap-4 border-b-2 pb-4 animate-in animate-bounce font-light max-[435px]:flex-col",
+            selected && "border-active"
+          )}
         >
           {edit ? (
             <Input
@@ -81,7 +87,7 @@ export function GroupFull({
               className={"w-fit"}
             />
           ) : (
-            <p className={"text-xl uppercase"}>
+            <p className={"text-xl uppercase transition-all"}>
               {name} ({allCards.length})
             </p>
           )}
@@ -89,12 +95,6 @@ export function GroupFull({
             <div className={"flex gap-1"}>
               <Button
                 variant={"outline"}
-                aria-label={"Edit name"}
-                className={cn(
-                  edit &&
-                    ((newName?.length ?? 0) > 0 ? "bg-green-800" : "bg-red-800")
-                )}
-                disabled={(newName?.length ?? 0) <= 0}
                 onClick={() => {
                   if (edit) {
                     updateGroup({
@@ -106,20 +106,27 @@ export function GroupFull({
                     setEdit(true);
                   }
                 }}
+                aria-label={"Edit name"}
+                className={cn(
+                  edit &&
+                    ((newName?.length ?? 0) > 0 ? "bg-green-800" : "bg-red-800")
+                )}
+                disabled={(newName?.length ?? 0) <= 0}
               >
                 <Edit3 />
               </Button>
-              <Button
-                variant={"outline"}
-                onClick={() => deleteGroup(id)}
-                aria-label={"Remove group"}
-              >
-                <Trash />
-              </Button>
+              <GroupExportButton group={group}>
+                <Button variant={"outline"} aria-label={"Export group"}>
+                  <Download />
+                </Button>
+              </GroupExportButton>
+              <GroupDeleteButton {...group} />
             </div>
           )}
           <div
-            class={"absolute"}
+            className={
+              "absolute transform max-[331px]:translate-x-[100%] max-[331px]:static max-[331px]:translate-y-[120%]"
+            }
             style={{
               left: "100%",
               transform: "translate(-100%,-100%)",
@@ -133,27 +140,28 @@ export function GroupFull({
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent className={"flex flex-wrap gap-2 w-fit"}>
+      <CardContent
+        className={
+          "grid grid-cols-11 gap-2 max-[1040px]:grid-cols-10 max-[970px]:grid-cols-9 max-[785px]:grid-cols-8 max-[700px]:grid-cols-7 max-[615px]:grid-cols-6 max-[530px]:grid-cols-5 max-[451px]:grid-cols-4 max-[380px]:grid-cols-3 max-[305px]:grid-cols-2 max-[234px]:grid-cols-1 m-auto"
+        }
+      >
         {allCards.map((each, index) => {
           const element = <MiniCard key={`${each}-${index}`} {...each} />;
 
           if (editable) {
             return (
-              <HoverCard openDelay={300}>
-                <HoverCardTrigger>
-                  <div>{element}</div>
-                </HoverCardTrigger>
-                <HoverCardContent className={"w-fit bg-card"}>
-                  <Button
-                    variant={"destructive"}
-                    onClick={() => {
-                      removeGroupCards(group.id, each);
-                    }}
+              <ContextMenu>
+                <ContextMenuTrigger>{element}</ContextMenuTrigger>
+                <ContextMenuContent>
+                  <ContextMenuItem
+                    className={"flex gap-2 items-center cursor-pointer"}
+                    onClick={() => removeGroupCards(id, each)}
                   >
                     <Trash />
-                  </Button>
-                </HoverCardContent>
-              </HoverCard>
+                    <p>Remove</p>
+                  </ContextMenuItem>
+                </ContextMenuContent>
+              </ContextMenu>
             );
           }
 
@@ -162,7 +170,7 @@ export function GroupFull({
         {editable ? (
           <AddCardButton
             onAdd={(name) => {
-              const card = findCardByName(name);
+              const card = findCard(name);
 
               if (!card) {
                 return;

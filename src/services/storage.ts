@@ -1,4 +1,4 @@
-import { DEFAULT_GROUPS } from "@/models/data/groups";
+import { useData } from "@/hooks/data.hook";
 import {
   STORAGE_EVENT_KEY,
   STORAGE_KEY,
@@ -32,15 +32,12 @@ export function extractFromStorage(): StorageEntityType {
 }
 
 function initStorage(): StorageEntityType {
+  const { groups } = useData();
+
   const value: StorageEntityType = {
     groups: [],
     simulator: {
-      groups: [
-        DEFAULT_GROUPS[0],
-        DEFAULT_GROUPS[1],
-        DEFAULT_GROUPS[2],
-        DEFAULT_GROUPS[3],
-      ],
+      groups: [groups[0], groups[1]],
     },
   };
 

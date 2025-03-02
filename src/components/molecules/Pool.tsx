@@ -7,7 +7,6 @@ import {
 } from "preact/hooks";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { useStorage } from "@/hooks/storage.hook";
-import { DEFAULT_GROUPS } from "@/models/data/groups";
 import { GroupType } from "@/models/group.model";
 import { CheckBox } from "../atoms/CheckBox";
 import { appendAssetsAPIPath, appendUrlPath } from "@/utils/path";
@@ -15,13 +14,16 @@ import { FRAME_SIZE } from "./Card";
 import { selectGroups, unselectGroups } from "@/services/pool";
 import { cn } from "@/lib/utils";
 import { FixedSizeGrid } from "react-window";
+import { useWindowScrollbarSize } from "@/hooks/window.hook";
+import { useData } from "@/hooks/data.hook";
 
 export function Pool() {
   const { groups, simulator } = useStorage();
+  const { groups: defaultGroups } = useData();
 
   const allGroups = useMemo(
-    () => [...groups, ...DEFAULT_GROUPS],
-    [groups, DEFAULT_GROUPS]
+    () => [...groups, ...defaultGroups],
+    [groups, defaultGroups]
   );
 
   const selectedGroups: (GroupType & {
@@ -117,10 +119,11 @@ export function PoolList({
   anchorTargetBlank?: boolean;
 }) {
   const { groups, simulator } = useStorage();
+  const { groups: defaultGroups } = useData();
 
   const allGroups = useMemo(
-    () => [...groups, ...DEFAULT_GROUPS],
-    [groups, DEFAULT_GROUPS]
+    () => [...groups, ...defaultGroups],
+    [groups, defaultGroups]
   );
 
   const selectedGroups: (GroupType & {
@@ -168,6 +171,8 @@ export function PoolList({
   const height = 300;
   const columnMode = false;
 
+  const scrollBarWidth = useWindowScrollbarSize();
+
   return (
     <FixedSizeGrid
       height={height}
@@ -175,9 +180,10 @@ export function PoolList({
       rowHeight={42}
       columnCount={columns}
       rowCount={Math.ceil(selectedGroups.length / columns)}
-      width={width + 18}
+      width={width + scrollBarWidth}
       style={{
         overflowY: "scroll",
+        overflowX: "hidden",
       }}
     >
       {({ columnIndex, rowIndex, style }) => {
@@ -190,7 +196,10 @@ export function PoolList({
         const group = selectedGroups[index];
 
         return (
-          <div className={"flex items-center gap-2"} style={style}>
+          <div
+            className={"flex items-center gap-2 overflow-x-hidden"}
+            style={style}
+          >
             <CheckBox
               value={selectedGroups.some(
                 (each) => each.id === group.id && each.selected

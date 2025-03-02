@@ -9,8 +9,12 @@ import {
 } from "../ui/dialog";
 import { PoolList } from "../molecules/Pool";
 import { DivButton } from "./DivButton";
+import { cn } from "@/lib/utils";
 
-export function PoolButton(props: HTMLAttributes<HTMLDivElement>) {
+export function PoolButton({
+  className,
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
   const [open, setOpen] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -39,7 +43,11 @@ export function PoolButton(props: HTMLAttributes<HTMLDivElement>) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <DivButton
-          class={"w-min py-0 pt-1 pb-1 pr-4 pl-4 text-[30px]"}
+          className={cn(
+            "shadow-xl cursor-pointer group hover:shadow-md m-auto text-[30px] py-0",
+            className
+          )}
+          aria-label={"Open pool menu button"}
           {...props}
         >
           POOL
@@ -47,7 +55,12 @@ export function PoolButton(props: HTMLAttributes<HTMLDivElement>) {
       </DialogTrigger>
       <DialogContent className={"!max-w-[825px]"}>
         <DialogTitle className={"text-3xl font-light"}>Pool</DialogTitle>
-        <div ref={ref} className={"flex items-center justify-center"}>
+        <div
+          ref={ref}
+          className={
+            "flex items-center justify-center bg-accent-foreground rounded-lg border border-x-gradient-two"
+          }
+        >
           <PoolList containerWidth={containerWidth} anchorTargetBlank />
         </div>
         <DialogFooter>

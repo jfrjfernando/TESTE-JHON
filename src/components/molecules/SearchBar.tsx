@@ -16,31 +16,31 @@ import {
   CommandItem,
   CommandList,
 } from "../ui/command";
-import { CardBaseType } from "@/models/card.model";
-import ALL_CARDS from "@/models/data/cards";
 import { appendUrlPath } from "@/utils/path";
 import { FixedSizeList } from "react-window";
 import { cn } from "@/lib/utils";
 import { padToThreeDigits } from "@/utils/strings";
-
-const searchValues: {
-  value: CardBaseType["name"];
-  label: string;
-}[] = ALL_CARDS.map((card) => ({
-  value: card.name,
-  label: card.name,
-}));
+import { useData } from "@/hooks/data.hook";
 
 export function SearchBar({
   children,
   clickType = "anchor",
   onSelect,
+  cards,
 }: React.PropsWithChildren<{
   clickType?: "anchor" | "custom";
   onSelect?: (cardName: string) => void;
+  cards?: ReturnType<typeof useData>["cards"];
 }>) {
   const [open, setRawOpen] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
+  const { cards: allCards } = cards ? { cards } : useData();
+  const searchValues = useMemo(() => {
+    return allCards.map((card) => ({
+      value: card.name,
+      label: card.name,
+    }));
+  }, [cards]);
 
   const ref = useRef<HTMLButtonElement>(null);
   const [containerWidth, setContainerWidth] = useState(-1);
@@ -63,7 +63,10 @@ export function SearchBar({
   }, []);
 
   const currentValues = useMemo(
-    () => searchValues.filter((each) => each.value.includes(search)),
+    () =>
+      searchValues.filter((each) =>
+        each.value.toLowerCase().includes(search.toLowerCase())
+      ),
     [search]
   );
 
@@ -86,11 +89,11 @@ export function SearchBar({
             variant="secondary"
             role="combobox"
             aria-expanded={open}
-            className={`w-[374px] max-sm:w-[120px] justify-between`}
+            className={`text-white group w-[374px] max-[731px]:w-[250px] max-[600px]:w-[150px] max-[500px]:w-[125px] max-[295px]:w-[75px] max-[205px]:w-[55px] max-[200px]:w-[100%] justify-between`}
             aria-label={"Search cards"}
             ref={ref}
           >
-            Search card...
+            <p className={"w-inherit overflow-hidden"}>Search card...</p>
             <CornerRightDown className="opacity-50" />
           </Button>
         )}
@@ -109,7 +112,13 @@ export function SearchBar({
             }}
           />
           <CommandList>
-            <CommandEmpty>No card found.</CommandEmpty>
+            <CommandEmpty
+              style={{
+                width: containerWidth,
+              }}
+            >
+              No card found.
+            </CommandEmpty>
             <CommandGroup className={`!w-[${containerWidth}px]`}>
               <FixedSizeList
                 width={containerWidth - 10}
@@ -122,6 +131,7 @@ export function SearchBar({
 
                   const element = (
                     <CommandItem
+                      id={`command-item-${index}`}
                       key={index}
                       value={card.value}
                       onSelect={() => {
@@ -129,10 +139,16 @@ export function SearchBar({
                         setOpen(false);
                       }}
                       style={style}
-                      className={"flex justify-between"}
+                      className={
+                        "flex justify-between group text-lg text-nowrap overflow-hidden"
+                      }
                     >
-                      {card.label}
-                      <p className={"tabular-nums text-red-400"}>
+                      <p class={"w-full overflow-hidden"}>{card.label}</p>
+                      <p
+                        className={
+                          "tabular-nums text-xl text-white group-data-[selected=true]:text-black"
+                        }
+                      >
                         {padToThreeDigits(searchValues.indexOf(card) + 1)}
                       </p>
                     </CommandItem>

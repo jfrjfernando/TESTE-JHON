@@ -1,9 +1,9 @@
 import { useStorage } from "@/hooks/storage.hook";
-import { DEFAULT_GROUPS } from "@/models/data/groups";
 import { useRouter } from "preact-router";
 import { useMemo } from "preact/hooks";
 import { GroupFull } from "../organisms/GroupFull";
 import { NotFound } from "../atoms/NotFound";
+import { useData } from "@/hooks/data.hook";
 
 export function GroupPage() {
   const [
@@ -18,13 +18,14 @@ export function GroupPage() {
   }
 
   const { groups } = useStorage();
+  const { groups: defaultGroups } = useData();
 
   const allGroups = useMemo(
     () => [
       ...groups.map((each) => ({ ...each, editable: true })),
-      ...DEFAULT_GROUPS,
+      ...defaultGroups,
     ],
-    [groups, DEFAULT_GROUPS]
+    [groups, defaultGroups]
   );
 
   const findGroup = useMemo(

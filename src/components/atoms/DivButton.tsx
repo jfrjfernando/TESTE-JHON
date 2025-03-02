@@ -20,7 +20,7 @@ export function DivButton({
     <div
       {...props}
       className={cn(
-        "relative px-6 py-3 text-4xl border-2 border-gray-900 text-slate-200 rounded-lg cursor-pointer shadow-md shadow-black hover:shadow-orange-300 hover:shadow-md hover:text-orange-200 active:shadow active:text-orange-300 disabled:text-gray-500 disabled:shadow-black disabled:shadow-sm transition-all disabled:cursor-not-allowed",
+        "flex items-center relative px-6 py-3 text-4xl border-2 border-gray-900 text-slate-200 rounded-lg cursor-pointer shadow-md shadow-black hover:shadow-orange-300 hover:shadow-md hover:text-orange-200 active:shadow active:text-orange-300 disabled:text-gray-500 disabled:shadow-black disabled:shadow-sm transition-all disabled:cursor-not-allowed",
         props.className ?? ""
       )}
       style={{
@@ -45,8 +45,10 @@ export function DivButton({
           transitionDuration: "250ms",
           background: props.disabled ? "black" : undefined,
         }}
-      ></span>
-      <div className={"z-50 relative"}>{children}</div>
+      />
+      <div className={"z-50 relative"}>
+        {children}
+      </div>
     </div>
   );
 }

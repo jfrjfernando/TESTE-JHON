@@ -10,9 +10,11 @@ export function useFusionAnimate() {
 
   const moveOutUsedCards = useCallback(
     (unusedCards: (CardBaseType & { index: number })[]) => {
-      const elements = unusedCards.map((each) =>
-        document.getElementById(GET_CARD_ELEMENT(each.id, each.index))
-      );
+      const elements = unusedCards
+        .map((each) =>
+          document.getElementById(GET_CARD_ELEMENT(each.id, each.index))
+        )
+        .filter((each) => !!each);
 
       elements.forEach((each) => {
         if (each) {

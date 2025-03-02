@@ -1,8 +1,9 @@
+import { useCards } from "@/hooks/cards.hook";
 import { CardBaseType, CardMonsterType, IdType } from "../models/card.model";
 import { GroupType } from "../models/group.model";
-import { findCardById } from "./finder";
 
 export function groupsToCards(
+  findCardById: ReturnType<typeof useCards>["findCardById"],
   groups: GroupType[]
 ): (CardBaseType | CardMonsterType)[] {
   return groups

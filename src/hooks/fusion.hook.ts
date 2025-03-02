@@ -3,6 +3,7 @@ import { generateQueueFusions } from "@/services/fusion";
 import { useCallback, useContext } from "preact/hooks";
 import { useSimulator } from "./simulator.hook";
 import { useFusionAnimate } from "./fusion-animate.hook";
+import { useCards } from "./cards.hook";
 
 export function useFusion() {
   const {
@@ -18,8 +19,13 @@ export function useFusion() {
   const { animate, moveOutUsedCards, clearCards } = useFusionAnimate();
 
   const { queueCards, hand, init } = useSimulator();
+  const { findCardById } = useCards();
 
   const startFusion = useCallback(() => {
+    if (fusing) {
+      // Already fusing!
+      return;
+    }
     if (queueCards.length < 2) {
       console.error("At least two cards are needed for fusing");
 
@@ -27,7 +33,7 @@ export function useFusion() {
     }
 
     // Set queue of fusions
-    const queue = generateQueueFusions(queueCards);
+    const queue = generateQueueFusions(findCardById, queueCards);
     setQueueFusions(queue);
 
     // Turn on fusing animation.
@@ -48,13 +54,15 @@ export function useFusion() {
         const response = queue[i];
         let target = queueCards[queueCardsIndex++];
 
-        moveOutUsedCards(
-          hand
-            .map((each, index) => ({
-              ...each,
-              index,
-            }))
-            .filter((each) => !each.priority)
+        cardsElements.push(
+          ...moveOutUsedCards(
+            hand
+              .map((each, index) => ({
+                ...each,
+                index,
+              }))
+              .filter((each) => !each.priority)
+          )
         );
 
         cardsElements.push(
@@ -98,7 +106,7 @@ export function useFusion() {
 
       fuseButton!.style.opacity = "100%";
     })();
-  }, [setFusing, setQueueFusions, setIndex, queueCards, hand]);
+  }, [setFusing, setQueueFusions, setIndex, queueCards, hand, fusing]);
 
   return {
     fusing,

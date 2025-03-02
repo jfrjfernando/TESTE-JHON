@@ -16,8 +16,9 @@ export function FuseButton(props: ButtonHTMLAttributes) {
       id={"fuse-button"}
       disabled={disabled}
       {...props}
-      class={"w-min px-10 py-4 text-5xl"}
+      class={"w-min px-10 text-5xl mb-[1vh]"}
       onClick={() => startFusion()}
+      aria-label={"Fuse button"}
     >
       FUSE
     </ButtonHigh>

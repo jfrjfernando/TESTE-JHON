@@ -1,6 +1,13 @@
+import { cn } from "@/lib/utils";
 import { appendUrlPath } from "@/utils/path";
 
-export function Logo({ size }: { size: number }) {
+export function Logo({
+  size,
+  className,
+}: {
+  size: number;
+  className?: string;
+}) {
   return (
     <div
       style={{
@@ -8,7 +15,7 @@ export function Logo({ size }: { size: number }) {
         width: `${size}px`,
         transform: "translate(0, 5%)",
       }}
-      class="hover:animate-pulse max-[200px]:hidden"
+      class={cn("hover:animate-pulse max-[200px]:hidden", className)}
     >
       <a href={appendUrlPath("/")} aria-label="Home button">
         <img

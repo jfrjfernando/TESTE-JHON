@@ -2,7 +2,7 @@ import { Simulator } from "../templates/Simulator";
 
 export function SimulatorPage() {
   return (
-    <main>
+    <main className={"!p-0"}>
       <Simulator />
     </main>
   );

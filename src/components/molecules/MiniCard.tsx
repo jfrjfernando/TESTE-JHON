@@ -69,7 +69,7 @@ export function MiniCard({
               bottom: "15px",
             }}
           >
-            <LongNumber numbers={attack} width={11} height={11} />
+            <LongNumber hiddenNumbers numbers={attack} width={11} height={11} />
           </div>
         )}
         {defense !== undefined && (
@@ -85,7 +85,7 @@ export function MiniCard({
               bottom: "2px",
             }}
           >
-            <LongNumber numbers={defense} width={11} height={11} />
+            <LongNumber hiddenNumbers numbers={defense} width={11} height={11} />
           </div>
         )}
       </div>

@@ -1,10 +1,10 @@
-import { findCardById, findCardByName } from "@/services/finder";
 import { useRouter } from "preact-router";
 import { useMemo } from "preact/hooks";
-import { StatsContent } from "../atoms/CardStatsButton";
 import { Dialog } from "../ui/dialog";
 import { appendAssetsAPIPath } from "@/utils/path";
 import { NotFound } from "../atoms/NotFound";
+import { CardStats } from "../organisms/CardStats";
+import { useCards } from "@/hooks/cards.hook";
 
 export function CardPage() {
   const [
@@ -13,6 +13,8 @@ export function CardPage() {
       matches: { id },
     },
   ] = useRouter() as any;
+
+  const { findCardById, findCardByName } = useCards();
 
   const card = useMemo(() => {
     let findCard = findCardById(id);
@@ -45,7 +47,7 @@ export function CardPage() {
           }}
           className={"max-w-[1040px] m-auto px-2.5 py-2"}
         >
-          <StatsContent
+          <CardStats
             focusCard={card}
             fusionsContainerProps={{
               className: "h-max mb-2 flex flex-wrap",

@@ -1,11 +1,11 @@
 import { useFusion } from "@/hooks/fusion.hook";
-import { CardUnknown } from "../atoms/CardUnknown";
-import { Card } from "./Card";
+import { CardUnknown } from "./CardUnknown";
+import { Card } from "../molecules/Card";
 
 export function CardResult() {
   const { queueFusions, index } = useFusion();
 
-  if (index === -1) {
+  if (index === -1 || !queueFusions[index]) {
     return <CardUnknown />;
   }
 

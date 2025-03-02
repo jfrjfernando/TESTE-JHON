@@ -13,7 +13,8 @@ export function CheckBox({
       type="checkbox"
       checked={value}
       onChange={(e) => setValue(e.currentTarget.checked)}
-      class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded-sm cursor-pointer"
+      class="w-5 h-5 accent-transparent checked:accent-active rounded-sm cursor-pointer"
+      aria-label={"Check button"}
     />
   );
 }

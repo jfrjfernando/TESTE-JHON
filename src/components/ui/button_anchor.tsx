@@ -34,13 +34,13 @@ const buttonVariants = cva(
   }
 );
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLAnchorElement>,
+export interface AnchorProps
+  extends React.AnchorHTMLAttributes<HTMLAnchorElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
 }
 
-const ButtonAnchor = React.forwardRef<HTMLAnchorElement, ButtonProps>(
+const ButtonAnchor = React.forwardRef<HTMLAnchorElement, AnchorProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "a";
     return (
@@ -54,6 +54,6 @@ const ButtonAnchor = React.forwardRef<HTMLAnchorElement, ButtonProps>(
     );
   }
 );
-ButtonAnchor.displayName = "Button";
+ButtonAnchor.displayName = "ButtonAnchor";
 
 export { ButtonAnchor, buttonVariants };

@@ -1,5 +1,4 @@
 import { useStorage } from "@/hooks/storage.hook";
-import { DEFAULT_GROUPS } from "@/models/data/groups";
 import { useCallback, useMemo } from "preact/hooks";
 import { Group } from "../organisms/Group";
 import {
@@ -13,16 +12,20 @@ import {
 import { Card, CardContent } from "../ui/card";
 import { usePaginationURL } from "@/hooks/pagination.hook";
 import { GroupType } from "@/models/group.model";
+import { useData } from "@/hooks/data.hook";
+import { appendUrlPath } from "@/utils/path";
 
 export function Groups() {
   const { groups, simulator } = useStorage();
+  const { groups: defaultGroups } = useData();
+
   const allGroups = useMemo(() => {
     const result = [
       ...groups.map((each) => ({
         ...each,
         editable: true,
       })),
-      ...DEFAULT_GROUPS,
+      ...defaultGroups,
     ];
 
     // Sort groups selected by simulator first
@@ -50,10 +53,9 @@ export function Groups() {
     });
 
     return result;
-  }, [groups]);
+  }, [groups, defaultGroups]);
 
-  const { view, next, previous, page, setPage, allPages } =
-    usePaginationURL<GroupType>(allGroups, 8);
+  const { view, page, allPages } = usePaginationURL<GroupType>(allGroups, 8);
 
   const pushToUp = useCallback(() => {
     const element = document.getElementById("groups-section");
@@ -76,32 +78,34 @@ export function Groups() {
         <Card className={"py-2 m-0"}>
           <CardContent>
             <Pagination>
-              <PaginationContent>
+              <PaginationContent className={"flex-wrap justify-center"}>
                 <PaginationItem
                   className={page <= 1 ? "opacity-45 pointer-events-none" : ""}
                 >
                   <PaginationPrevious
                     onClick={(e) => {
                       e.preventDefault();
-                      previous();
                       pushToUp();
                     }}
+                    href={page < 2 ? "" : appendUrlPath(`/?page=${page - 1}`)}
                   />
                 </PaginationItem>
-                {Array.from({ length: allPages }).map((_, index) => (
-                  <PaginationItem key={index}>
-                    <PaginationLink
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setPage(index + 1);
-                        pushToUp();
-                      }}
-                      isActive={page === index + 1}
-                    >
-                      {index + 1}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
+                {Array.from({ length: allPages }).map((_, index) => {
+                  return (
+                    <PaginationItem key={index} className={"peer"}>
+                      <PaginationLink
+                        onClick={(e) => {
+                          e.preventDefault();
+                          pushToUp();
+                        }}
+                        isActive={page === index + 1}
+                        href={appendUrlPath(`/?page=${index + 1}`)}
+                      >
+                        {index + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  );
+                })}
                 <PaginationItem
                   className={
                     page >= allPages ? "opacity-45 pointer-events-none" : ""
@@ -110,9 +114,13 @@ export function Groups() {
                   <PaginationNext
                     onClick={(e) => {
                       e.preventDefault();
-                      next();
                       pushToUp();
                     }}
+                    href={
+                      page >= allPages
+                        ? ""
+                        : appendUrlPath(`/?page=${page + 1}`)
+                    }
                   />
                 </PaginationItem>
               </PaginationContent>

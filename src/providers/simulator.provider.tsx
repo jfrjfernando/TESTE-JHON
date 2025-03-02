@@ -4,20 +4,24 @@ import { CardBaseType } from "../models/card.model";
 import { useStorage } from "../hooks/storage.hook";
 import { groupsToCards } from "../services/simulator";
 import { generateHand, shuffleCards } from "../services/randomize";
-import { DEFAULT_GROUPS } from "@/models/data/groups";
+import { useData } from "@/hooks/data.hook";
+import { useCards } from "@/hooks/cards.hook";
 
 export function SimulatorProvider({ children }: PropsWithChildren) {
   const [speed, setSpeed] = useState<1 | 2 | 3 | 4 | 5>(1);
   const { groups, simulator } = useStorage();
+  const { groups: defaultGroups } = useData();
+  const { findCardById } = useCards();
 
   const allGroups = useMemo(
-    () => [...groups, ...DEFAULT_GROUPS],
-    [groups, DEFAULT_GROUPS]
+    () => [...groups, ...defaultGroups],
+    [groups, defaultGroups]
   );
 
   const [cards, setCards] = useState<CardBaseType[]>(
     shuffleCards(
       groupsToCards(
+        findCardById,
         simulator.groups
           .map((each) => allGroups.find((group) => group.id === each.id))
           .filter((each) => !!each)
@@ -31,6 +35,7 @@ export function SimulatorProvider({ children }: PropsWithChildren) {
     setCards(
       shuffleCards(
         groupsToCards(
+          findCardById,
           simulator.groups
             .map((each) => allGroups.find((group) => group.id === each.id))
             .filter((each) => !!each)

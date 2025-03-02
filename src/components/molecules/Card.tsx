@@ -128,7 +128,7 @@ export function Card({
             bottom: "26px",
           }}
         >
-          <LongNumber numbers={attack} width={19} height={25} />
+          <LongNumber hiddenNumbers numbers={attack} width={19} height={25} />
         </div>
       )}
       {defense !== undefined && (
@@ -144,7 +144,7 @@ export function Card({
             bottom: "3px",
           }}
         >
-          <LongNumber numbers={defense} width={19} height={25} />
+          <LongNumber hiddenNumbers numbers={defense} width={19} height={25} />
         </div>
       )}
 

@@ -1,5 +1,5 @@
-import { CardBaseType } from "../models/card.model";
-import { findCardById } from "./finder";
+import { useCards } from "@/hooks/cards.hook";
+import { CardBaseType, CardMonsterType, CardType } from "../models/card.model";
 
 export type FusionResponse = {
   /**
@@ -14,17 +14,34 @@ export type FusionResponse = {
 };
 
 export function resolveFusion(
+  findCardById: ReturnType<typeof useCards>["findCardById"],
   source: CardBaseType,
   target: CardBaseType
 ): CardBaseType | null {
-  if (!source.fusions?.length) {
+  if (
+    !(source.fusions?.length || (source as CardMonsterType)?.equips?.length)
+  ) {
     return null;
   }
-
-  const fusion = source.fusions.find((fusion) => fusion[0] === target.id);
+  const fusion = source.fusions?.find((fusion) => fusion[0] === target.id);
 
   if (!fusion) {
     // Fusion not exists.
+
+    // Try with equips
+    if (
+      source.cardType === CardType.MONSTER &&
+      target.cardType !== CardType.MONSTER
+    ) {
+      if (
+        (source as CardMonsterType).equips?.find((each) => each === target.id)
+      ) {
+        // It's an equip "fusion"
+
+        return source;
+      }
+    }
+
     return null;
   }
 
@@ -40,7 +57,10 @@ export function resolveFusion(
   return card;
 }
 
-export function generateQueueFusions(queue: CardBaseType[]): FusionResponse[] {
+export function generateQueueFusions(
+  findCardById: ReturnType<typeof useCards>["findCardById"],
+  queue: CardBaseType[]
+): FusionResponse[] {
   if (queue.length < 2) {
     console.error("Can't fusion only one card!");
 
@@ -55,9 +75,21 @@ export function generateQueueFusions(queue: CardBaseType[]): FusionResponse[] {
     const target = queue[i];
 
     // Result will be the fusion or in fail case it will be target card
-    const fusionResult = resolveFusion(result, target);
+    const fusionResult = resolveFusion(findCardById, result, target);
 
-    result = fusionResult ?? target;
+    if (
+      result.cardType !== CardType.MONSTER &&
+      target.cardType === CardType.MONSTER
+    ) {
+      result = target;
+    } else if (
+      target.cardType !== CardType.MONSTER &&
+      result.cardType === CardType.MONSTER
+    ) {
+      // result = result;
+    } else {
+      result = fusionResult ?? target;
+    }
 
     responses.push({
       success: !!fusionResult,
