@@ -10,7 +10,7 @@ import { padToThreeDigits } from "@/utils/strings";
 import { useDataVolatile } from "@/hooks/data.hook";
 
 export function NavigationBar() {
-  const [{ url }] = useRouter();
+  const [{ url }, push] = useRouter();
   const { cards } = useDataVolatile();
 
   if (url.includes("simulator")) {
@@ -50,7 +50,12 @@ export function NavigationBar() {
             size={128}
             className="max-[634px]:!w-[100px] max-[485px]:!w-[80px]"
           />
-          <SearchBar cards={cards} />
+          <SearchBar
+            cards={cards}
+            onSelect={(cardName) => {
+              push(appendUrlPath(`/cards/${cardName}`));
+            }}
+          />
           <div className={"max-[336px]:hidden"}>
             <Button
               className={"py-1 px-3 text-xl"}

@@ -64,9 +64,11 @@ export function SearchBar({
 
   const currentValues = useMemo(
     () =>
-      searchValues.filter((each) =>
-        each.value.toLowerCase().includes(search.toLowerCase())
-      ),
+      searchValues
+        .filter((each) =>
+          each.value.toLowerCase().includes(search.toLowerCase())
+        )
+        .splice(0, 30),
     [search]
   );
 
@@ -120,36 +122,28 @@ export function SearchBar({
               No card found.
             </CommandEmpty>
             <CommandGroup className={`!w-[${containerWidth}px]`}>
-              <FixedSizeList
-                width={containerWidth - 10}
-                height={150}
-                itemSize={32}
-                itemCount={currentValues.length}
-              >
-                {({ index, style }) => {
-                  const card = currentValues[index];
-
+              {search ? (
+                currentValues.map((each, index) => {
                   const element = (
                     <CommandItem
                       id={`command-item-${index}`}
                       key={index}
-                      value={card.value}
+                      value={each.value}
                       onSelect={() => {
-                        onSelect?.(card.value);
                         setOpen(false);
+                        onSelect?.(each.value);
                       }}
-                      style={style}
                       className={
                         "flex justify-between group text-lg text-nowrap overflow-hidden"
                       }
                     >
-                      <p class={"w-full overflow-hidden"}>{card.label}</p>
+                      <p class={"w-full overflow-hidden"}>{each.label}</p>
                       <p
                         className={
                           "tabular-nums text-xl text-white group-data-[selected=true]:text-black"
                         }
                       >
-                        {padToThreeDigits(searchValues.indexOf(card) + 1)}
+                        {padToThreeDigits(searchValues.indexOf(each) + 1)}
                       </p>
                     </CommandItem>
                   );
@@ -158,7 +152,7 @@ export function SearchBar({
                     return (
                       <a
                         href={appendUrlPath(
-                          `/cards/${encodeURIComponent(card.value)}`
+                          `/cards/${encodeURIComponent(each.value)}`
                         )}
                       >
                         {element}
@@ -167,8 +161,58 @@ export function SearchBar({
                   }
 
                   return element;
-                }}
-              </FixedSizeList>
+                })
+              ) : (
+                <FixedSizeList
+                  width={containerWidth - 6}
+                  height={240}
+                  itemSize={40}
+                  itemCount={currentValues.length}
+                >
+                  {({ index, style }) => {
+                    const card = currentValues[index];
+
+                    const element = (
+                      <CommandItem
+                        id={`command-item-${index}`}
+                        key={index}
+                        value={card.value}
+                        onSelect={() => {
+                          setOpen(false);
+                          onSelect?.(card.value);
+                        }}
+                        style={style}
+                        className={
+                          "flex justify-between group text-lg text-nowrap overflow-hidden"
+                        }
+                      >
+                        <p class={"w-full overflow-hidden"}>{card.label}</p>
+                        <p
+                          className={
+                            "tabular-nums text-xl text-white group-data-[selected=true]:text-black"
+                          }
+                        >
+                          {padToThreeDigits(searchValues.indexOf(card) + 1)}
+                        </p>
+                      </CommandItem>
+                    );
+
+                    if (clickType === "anchor") {
+                      return (
+                        <a
+                          href={appendUrlPath(
+                            `/cards/${encodeURIComponent(card.value)}`
+                          )}
+                        >
+                          {element}
+                        </a>
+                      );
+                    }
+
+                    return element;
+                  }}
+                </FixedSizeList>
+              )}
             </CommandGroup>
           </CommandList>
         </Command>
