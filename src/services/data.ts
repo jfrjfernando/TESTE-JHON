@@ -3,7 +3,7 @@ import { GroupType } from "@/models/group.model";
 import { appendAssetsAPIPath } from "@/utils/path";
 import pako from "pako";
 
-const APP_JSON_FILENAME = "app.json.gz";
+const APP_JSON_FILENAME = "app_v1.json.gz";
 const GROUPS_JSON_FILENAME = "groups_v1.json.gz";
 
 export async function loadAllCards(): Promise<CardBaseType[]> {

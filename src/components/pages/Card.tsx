@@ -52,7 +52,7 @@ export function CardPage() {
               )})`,
               backgroundSize: "cover",
             }}
-            className={"max-w-[1040px] m-auto px-2.5 py-2"}
+            className={"max-w-[1040px] m-auto px-2.5 py-2 rounded-lg box-shadow"}
           >
             <CardStats
               focusCard={card}

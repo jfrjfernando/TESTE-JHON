@@ -86,6 +86,10 @@
     box-shadow: 0 0 15px var(--accent);
   }
 
+  .box-shadow {
+    box-shadow: 0 0 15px black;
+  }
+
   .table-cards-scroll > *::-webkit-scrollbar {
     height: 10px;
     background-color: var(--gradient-one);

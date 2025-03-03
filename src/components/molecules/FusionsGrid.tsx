@@ -139,6 +139,7 @@ export function FusionsGrid({
   return (
     <div ref={ref}>
       {title(cardFusions.length)}
+      <span className={"h-4"} />
       {containerWidth && containerWidth > 0 ? (
         <FixedSizeGrid
           height={height}
@@ -154,6 +155,8 @@ export function FusionsGrid({
           style={{
             overflowY: "scroll",
             overflowX: "hidden",
+            marginTop: "15px",
+            marginBottom: "15px",
           }}
         >
           {({ columnIndex, rowIndex, style }) => {
