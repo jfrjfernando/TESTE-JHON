@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@notwoods/preact-helmet": "^6.1.0",
     "@radix-ui/react-context-menu": "^2.2.6",
     "@radix-ui/react-dialog": "^1.1.6",
     "@radix-ui/react-hover-card": "^1.1.6",
@@ -36,6 +37,7 @@
     "@types/react-window": "^1.8.8",
     "typescript": "5.7.2",
     "vite": "6.1.0",
-    "vite-plugin-pwa": "^0.21.1"
+    "vite-plugin-pwa": "^0.21.1",
+    "vite-plugin-sitemap": "^0.7.1"
   }
 }

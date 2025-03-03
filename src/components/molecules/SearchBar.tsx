@@ -62,15 +62,13 @@ export function SearchBar({
     return () => observer.disconnect();
   }, []);
 
-  const currentValues = useMemo(
-    () =>
-      searchValues
-        .filter((each) =>
-          each.value.toLowerCase().includes(search.toLowerCase())
-        )
-        .splice(0, 30),
-    [search]
-  );
+  const currentValues = useMemo(() => {
+    const values = searchValues.filter((each) =>
+      each.value.toLowerCase().includes(search.toLowerCase())
+    );
+
+    return search?.length ? values.splice(0, 30) : values;
+  }, [search]);
 
   const setOpen = useCallback(
     (open: boolean) => {

@@ -7,6 +7,7 @@ import { useRouter } from "preact-router";
 import { appendAssetsAPIPath } from "./utils/path";
 import { useMemo } from "preact/hooks";
 import { Footer } from "./components/organisms/Footer";
+import { DynamicHead } from "./components/molecules/Helmet";
 
 export function App() {
   const [{ url }] = useRouter();
@@ -44,6 +45,10 @@ export function App() {
         [<Footer />],
       ]}
     >
+      <DynamicHead
+        description="Experience the ultimate Yu-Gi-Oh! Fusion Simulator. Browse all fusion cards, discover new combinations, and test your skills in a fusion playground. Perfect for TCG and OCG players!"
+        keywords="fusion, simulator, yu-gi-oh, forbidden-memories, fm, all cards, all fusions"
+      />
       <Routes />
     </CoreProvider>
   );

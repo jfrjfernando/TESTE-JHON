@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { useWindowScrollbarSize } from "@/hooks/window.hook";
 import { useData } from "@/hooks/data.hook";
 import { useCards } from "@/hooks/cards.hook";
+import { DynamicHead } from "../molecules/Helmet";
 
 export function PoolPage() {
   const { groups, simulator } = useStorage();
@@ -118,53 +119,60 @@ export function PoolPage() {
   const scrollBarWidth = useWindowScrollbarSize();
 
   return (
-    <main className={"!max-w-[960px]"}>
-      <div ref={ref} className={"flex flex-col gap-4"}>
-        <Pool />
-        <Card id={"pool-cards"}>
-          <CardHeader>
-            <CardTitle className={"text-3xl font-light"}>
-              Cards ({cards.length})
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <FixedSizeGrid
-              height={height}
-              columnWidth={columnMode ? 100 : width / columns}
-              rowHeight={94}
-              columnCount={columns}
-              rowCount={Math.ceil(cards.length / columns)}
-              width={width + scrollBarWidth}
-              style={{
-                overflowY: "scroll",
-              }}
-            >
-              {({ columnIndex, rowIndex, style }) => {
-                const index = rowIndex * columns + columnIndex;
+    <>
+      <DynamicHead
+        titlePrefix={"Pool"}
+        description={"See all cards in your pool"}
+        keywords={"pool, cards, total, all, groups"}
+      />
+      <main className={"!max-w-[960px]"}>
+        <div ref={ref} className={"flex flex-col gap-4"}>
+          <Pool />
+          <Card id={"pool-cards"}>
+            <CardHeader>
+              <CardTitle className={"text-3xl font-light"}>
+                Cards ({cards.length})
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <FixedSizeGrid
+                height={height}
+                columnWidth={columnMode ? 100 : width / columns}
+                rowHeight={94}
+                columnCount={columns}
+                rowCount={Math.ceil(cards.length / columns)}
+                width={width + scrollBarWidth}
+                style={{
+                  overflowY: "scroll",
+                }}
+              >
+                {({ columnIndex, rowIndex, style }) => {
+                  const index = rowIndex * columns + columnIndex;
 
-                if (cards.length <= index) {
-                  return null;
-                }
+                  if (cards.length <= index) {
+                    return null;
+                  }
 
-                const card = cards[index];
+                  const card = cards[index];
 
-                return (
-                  <div
-                    style={{
-                      ...style,
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <MiniCard key={card} {...card} />
-                  </div>
-                );
-              }}
-            </FixedSizeGrid>
-          </CardContent>
-        </Card>
-      </div>
-    </main>
+                  return (
+                    <div
+                      style={{
+                        ...style,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <MiniCard key={card} {...card} />
+                    </div>
+                  );
+                }}
+              </FixedSizeGrid>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
+    </>
   );
 }
