@@ -10,18 +10,18 @@ export function useSimulatorInput() {
 
   useInput([
     {
-      keys: ["ArrowLeft"],
+      keys: ["ArrowLeft", "KeyA"],
       action: () =>
         !fusing && setFocusCard(Math.max(0, (focusCardIndex ?? 0) - 1)),
     },
     {
-      keys: ["ArrowRight"],
+      keys: ["ArrowRight", "KeyD"],
       action: () =>
         !fusing &&
         setFocusCard(Math.min(MAX_HAND_CARDS - 1, (focusCardIndex ?? 0) + 1)),
     },
     {
-      keys: ["ArrowUp", "ArrowDown"],
+      keys: ["ArrowUp", "ArrowDown", "KeyW", "KeyS"],
       action: () => !fusing && selectHandCard(),
     },
     {
