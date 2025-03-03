@@ -2,9 +2,6 @@ import { MAX_HAND_CARDS } from "@/models/card.model";
 import { useFusion } from "./fusion.hook";
 import { useInput } from "./input.hook";
 import { useSimulator } from "./simulator.hook";
-// import { useControllerInput } from "./controller-input.hook";
-
-// TODO: Add stick (using axes) support
 
 export function useSimulatorInput() {
   const { setFocusCard, focusCardIndex, selectHandCard, resetHand } =
@@ -33,10 +30,11 @@ export function useSimulatorInput() {
     },
     {
       keys: ["KeyR"],
-      action: resetHand,
+      action: () => !fusing && resetHand(),
     },
   ]);
 
+  // TODO: Add stick (using axes) support
   // TODO: I don't like this implementation of joystick
   // TODO: Find a better method, (freeze causes annoying)
   // const [freeze, setFreeze] = useState<Date>(new Date());

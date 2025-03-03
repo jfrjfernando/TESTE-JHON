@@ -4,6 +4,7 @@ import { useCallback, useContext } from "preact/hooks";
 import { useSimulator } from "./simulator.hook";
 import { useFusionAnimate } from "./fusion-animate.hook";
 import { useCards } from "./cards.hook";
+import { CardEquipType, CardMonsterType, CardType } from "@/models/card.model";
 
 export function useFusion() {
   const {
@@ -15,7 +16,6 @@ export function useFusion() {
     setQueueFusions,
     reset,
   } = useContext(FusionContext);
-
   const { animate, moveOutUsedCards, clearCards } = useFusionAnimate();
 
   const { queueCards, hand, init } = useSimulator();
@@ -84,6 +84,23 @@ export function useFusion() {
             response.success,
             () => {
               setIndex(i);
+
+              if (
+                source.cardType === CardType.MONSTER &&
+                target.cardType === CardType.EQUIP &&
+                response.success
+              ) {
+                const modificationValue =
+                  (target as CardEquipType).modificationValue ?? 0;
+
+                // Bad practice (but a fast solution for state in async)
+
+                (response.result as CardMonsterType).attack +=
+                  modificationValue;
+
+                (response.result as CardMonsterType).defense +=
+                  modificationValue;
+              }
             },
             i === 0
           ))

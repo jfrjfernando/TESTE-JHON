@@ -170,4 +170,11 @@ export type CardMonsterType = CardBaseType & {
   equips?: CardBaseType["id"][];
 };
 
+export type CardEquipType = CardBaseType & {
+  /**
+   * Equip ATK and DEF buff value
+   */
+  modificationValue?: 500 | 100;
+};
+
 export const MAX_HAND_CARDS = 5;
