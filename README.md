@@ -34,8 +34,14 @@ For questions or feedback, contact me lukadevv@proton.me
 
 If you enjoy my projects and want to help support further development, feel free to donate! Every contribution, big or small, is greatly appreciated and helps me keep creating.
 
+_**Special thanks to @Tromboncino for the idea and to @Layoso.**_
+
+## 🙌 Special Thanks to Donors  
+
+A huge thank you to everyone who has supported this project!  
+
+- 🏆 **@Trombocino** – $6 
+
 ### Donate via PayPal:
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate/?hosted_button_id=F4ZRZT3AUZ4MS)
-
-_Special thanks to @Tromboncino for the idea and to @Layoso._

@@ -1,4 +1,13 @@
 - Add card alignments
 - Add scroll loading for search combobox
 - Add gamepad API for inputs
-- Add equip fusion as adding damage or defense, also avoid replace it in fusions (target)
+- Add equip fusion as adding damage or defense
+
+
+TODAY:
+- Add "from fusions" to.
+- Add spreadsheet of "Fusions FM"
+- Add tutorial and guide section (SEO improvement also)
+- Add magic card modifications
+- HTML metadata per card? (Better sitemap?)
+- Fix search bar on enter (onSelect)

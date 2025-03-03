@@ -14,7 +14,7 @@ export function Routes() {
 
   const handleRouteChange = () => {
     setLoading(true);
-    setTimeout(() => setLoading(false), 450);
+    setTimeout(() => setLoading(false), 200);
   };
 
   return (

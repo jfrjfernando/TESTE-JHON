@@ -24,5 +24,6 @@ export function useCards() {
     findCardById,
     findCardsByIds,
     findCardByName,
+    cards,
   };
 }
