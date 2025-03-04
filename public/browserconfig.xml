@@ -2,11 +2,13 @@
 <browserconfig>
   <msapplication>
     <tile>
-     <square16x16logo src="/favicon-16x16.png" />
-      <square32x32logo src="/favicon-32x32.png" />
-      <square192x192logo src="/android-chrome-192x192.png" />
-      <square512x512logo src="/android-chrome-512x512.png" />
+      <square70x70logo src="/mstile-70x70.png"/>
+      <square144x144logo src="/mstile-144x144.png"/>
+      <square150x150logo src="/mstile-150x150.png"/>
+      <wide310x150logo src="/mstile-310x150.png"/>
+      <square310x310logo src="/mstile-310x310.png"/>
       <TileColor>#cc893d</TileColor>
+      <TileImage src="/android-chrome-512x512.png"/>
     </tile>
   </msapplication>
 </browserconfig>
