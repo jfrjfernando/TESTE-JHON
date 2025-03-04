@@ -7,8 +7,9 @@ import { CardBaseType } from "@/models/card.model";
 import { unselectGroups } from "@/services/pool";
 
 export function useSimulator() {
-  const { simulator } = useStorage();
-  const { hand, setHand, cards, setCards, speed, setSpeed } =
+  const { simulator, toggleSpeed, togglePrediction, isPredictionEnabled } =
+    useStorage();
+  const { hand, setHand, cards, setCards, resets, setResets } =
     useContext(SimulatorContext);
   const queueCards = useMemo<
     (CardBaseType & {
@@ -79,13 +80,15 @@ export function useSimulator() {
     return find;
   }, [hand]);
 
-  const resetHand = useCallback(
-    () => setHand(generateHand(cards)),
-    [setCards, generateHand, cards]
-  );
+  const resetHand = useCallback(() => {
+    setHand(generateHand(cards));
+
+    setResets(resets + 1);
+  }, [setCards, generateHand, cards, resets, setResets]);
 
   const init = useCallback(() => {
     // Initialize the simulator
+    setResets(0);
 
     // Set the hand
     resetHand();
@@ -143,8 +146,6 @@ export function useSimulator() {
     [unselectGroups, simulator]
   );
 
-  const toggleSpeed = useCallback(() => setSpeed(speed === 1 ? 3 : 1), [speed]);
-
   return {
     hand,
     setCards,
@@ -156,8 +157,10 @@ export function useSimulator() {
     focusCardIndex,
     setFocusCard,
     queueCards,
-    speed,
-    setSpeed,
     toggleSpeed,
+    togglePrediction,
+    speed: simulator.settings.speed,
+    resets,
+    isPredictionEnabled,
   };
 }

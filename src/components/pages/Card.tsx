@@ -6,19 +6,23 @@ import { NotFound } from "../atoms/NotFound";
 import { CardStats } from "../organisms/CardStats";
 import { useCards } from "@/hooks/cards.hook";
 import { DynamicHead } from "../molecules/Helmet";
+import { getURLFriendlyString } from "@/utils/strings";
+import { IdType } from "@/models/card.model";
 
 export function CardPage() {
   const [
     {
       // "id" could be an ID and a same
-      matches: { id },
+      matches: { id: rawId },
     },
   ] = useRouter() as any;
 
   const { findCardById, findCardByName } = useCards();
 
+  const id = useMemo(() => getURLFriendlyString(rawId), [rawId]);
+
   const card = useMemo(() => {
-    let findCard = findCardById(id);
+    let findCard = findCardById(id as IdType);
 
     if (!findCard) {
       findCard = findCardByName(id);
@@ -52,7 +56,9 @@ export function CardPage() {
               )})`,
               backgroundSize: "cover",
             }}
-            className={"max-w-[1040px] m-auto px-2.5 py-2 rounded-lg box-shadow"}
+            className={
+              "max-w-[1040px] m-auto px-2.5 py-2 rounded-lg box-shadow"
+            }
           >
             <CardStats
               focusCard={card}

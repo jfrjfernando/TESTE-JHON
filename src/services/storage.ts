@@ -1,10 +1,12 @@
-import { useData } from "@/hooks/data.hook";
 import {
+  CURRENT_VERSION,
   STORAGE_EVENT_KEY,
   STORAGE_KEY,
   StorageEntity,
   StorageEntityType,
 } from "../models/storage.entity";
+import { DEFAULT_SELECTED_GROUPS } from "./group";
+import { _MIGRATION_storageTo0_0_1 } from "./migrations/to-0.0.1";
 
 export function extractFromStorage(): StorageEntityType {
   const storage = localStorage.getItem(STORAGE_KEY);
@@ -17,6 +19,15 @@ export function extractFromStorage(): StorageEntityType {
 
   try {
     const rawStorageAsArray: object = JSON.parse(storage);
+
+    // Migration check (from unknown to 0.0.1):
+    if (!(rawStorageAsArray as any).version) {
+      return _MIGRATION_storageTo0_0_1(
+        rawStorageAsArray,
+        DEFAULT_SELECTED_GROUPS,
+        () => backupIt(String(storage))
+      );
+    }
 
     const storageObject: StorageEntityType =
       StorageEntity.validateSync(rawStorageAsArray);
@@ -32,13 +43,19 @@ export function extractFromStorage(): StorageEntityType {
 }
 
 function initStorage(): StorageEntityType {
-  const { groups } = useData();
-
   const value: StorageEntityType = {
     groups: [],
     simulator: {
-      groups: [groups[0], groups[1]],
+      groups: DEFAULT_SELECTED_GROUPS.map((id) => ({
+        id,
+        timestamp: Date.now(),
+      })),
+      settings: {
+        showFusions: true,
+        speed: 1,
+      },
     },
+    version: CURRENT_VERSION,
   };
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(value));

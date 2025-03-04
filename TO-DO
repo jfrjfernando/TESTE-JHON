@@ -3,11 +3,19 @@
 - Add gamepad API for inputs
 - Add equip fusion as adding damage or defense
 
-
 TODAY:
+
 - --Add "from fusions" to.--
 - --Fix search bar--
 - --HTML metadata per card? (Better sitemap?)--
 - --Add equip card modifications--
-- Add spreadsheet of "Fusions FM"
+- --Add localstorage for speed button--
+- --Fix names with # in the URL (winged dragon # 2 and # 1)--
+- --Fix predicted fusion algorithm--
+- --Fix equip fusions prediction total stats--
+- --Add button for toggle predict--
+
+- Add spreadsheet of "Fusions FM" (or a guide that includes it)
 - Add tutorial and guide section (SEO improvement also)
+
+* Check all memos, effects that use "hand" because when it is focus the state will change

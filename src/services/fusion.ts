@@ -1,5 +1,10 @@
 import { useCards } from "@/hooks/cards.hook";
-import { CardBaseType, CardMonsterType, CardType } from "../models/card.model";
+import {
+  CardBaseType,
+  CardEquipType,
+  CardMonsterType,
+  CardType,
+} from "../models/card.model";
 
 export type FusionResponse = {
   /**
@@ -11,6 +16,18 @@ export type FusionResponse = {
    * The fusion card result or the second card (target)
    */
   result: CardBaseType;
+};
+
+export type PredictedFusionLine = {
+  /**
+   * Array of hand index (priority line)
+   */
+  line: number[];
+
+  /**
+   * All fusions in the line
+   */
+  resultsId: CardBaseType[];
 };
 
 export function resolveFusion(
@@ -77,18 +94,25 @@ export function generateQueueFusions(
     // Result will be the fusion or in fail case it will be target card
     const fusionResult = resolveFusion(findCardById, result, target);
 
-    if (
-      result.cardType !== CardType.MONSTER &&
-      target.cardType === CardType.MONSTER
-    ) {
-      result = target;
-    } else if (
-      target.cardType !== CardType.MONSTER &&
-      result.cardType === CardType.MONSTER
-    ) {
-      // result = result;
+    if (!fusionResult) {
+      if (
+        result.cardType !== CardType.MONSTER &&
+        target.cardType === CardType.MONSTER
+      ) {
+        // Example: Equip + Monster = Monster
+        result = target;
+      } else if (
+        result.cardType === CardType.MONSTER &&
+        target.cardType !== CardType.MONSTER
+      ) {
+        // Example: Monster + Equip = Monster
+        // result = result;
+      } else {
+        // Example: Monster A + Monster B = Monster B
+        result = target;
+      }
     } else {
-      result = fusionResult ?? target;
+      result = fusionResult;
     }
 
     responses.push({
@@ -98,4 +122,121 @@ export function generateQueueFusions(
   }
 
   return responses;
+}
+
+/**
+ * Get possible fusions from cards
+ */
+export function predictFusions(
+  hand: CardBaseType[],
+  findCardById: ReturnType<typeof useCards>["findCardById"]
+): PredictedFusionLine[] {
+  const predicted: PredictedFusionLine[] = [];
+
+  const monstersFirst: {
+    card: CardBaseType;
+    index: number;
+  }[] = hand
+    .map((card, index) => ({
+      card,
+      index,
+    }))
+    .sort((a, b) =>
+      a.card.cardType === CardType.MONSTER &&
+      b.card.cardType !== CardType.MONSTER
+        ? -1
+        : a.card.cardType !== CardType.MONSTER &&
+          b.card.cardType === CardType.MONSTER
+        ? 1
+        : 0
+    );
+
+  for (let i = 0; i < monstersFirst.length; i++) {
+    const line = [monstersFirst[i].index];
+    const results = [];
+
+    // Base card
+    let lastCard: CardBaseType = monstersFirst[i].card;
+
+    compare: for (let j = 0; j < monstersFirst.length; j++) {
+      if (line.includes(monstersFirst[j].index)) {
+        // The card is in the line already
+        continue;
+      }
+
+      const compareCard: CardBaseType = monstersFirst[j].card;
+
+      for (const [target, result] of lastCard.fusions ?? []) {
+        if (target === compareCard.id) {
+          const findCard = findCardById(result);
+
+          if (!findCard) {
+            console.error("Internal error: card was not found!", target);
+            continue;
+          }
+
+          // Add to the current line
+          line.push(monstersFirst[j].index);
+
+          // Set last card as result
+          lastCard = findCard;
+
+          results.push(findCard);
+
+          continue compare;
+        }
+      }
+
+      for (const equip of (lastCard as CardMonsterType).equips ?? []) {
+        if (equip === compareCard.id) {
+          const findCard = findCardById(equip);
+
+          if (!findCard) {
+            console.error("Internal error: card was not found!", equip);
+            continue;
+          }
+
+          let addition = (findCard as CardEquipType).modificationValue ?? 0;
+
+          if (
+            results.length > 0 &&
+            (results[results.length - 1] as any).addition
+          ) {
+            addition += (results[results.length - 1] as any).addition;
+          }
+
+          const rawAttack = (lastCard as CardMonsterType)?.attack;
+          const rawDefense = (lastCard as CardMonsterType)?.attack;
+
+          const attack = rawAttack ? rawAttack + addition : undefined;
+          const defense = rawDefense ? rawDefense + addition : undefined;
+
+          // Add to the current line
+          line.push(monstersFirst[j].index);
+
+          results.push({
+            ...lastCard,
+            attack,
+            defense,
+            addition,
+          });
+
+          continue compare;
+        }
+      }
+    }
+
+    if (line.length <= 1) {
+      // Fusions need two cards at least
+
+      continue;
+    }
+
+    predicted.push({
+      line,
+      resultsId: results,
+    });
+  }
+
+  return predicted;
 }

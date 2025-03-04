@@ -9,21 +9,68 @@ import { useFusion } from "@/hooks/fusion.hook";
 import { CardResult } from "../atoms/CardResult";
 import { CardStatsButton } from "../atoms/CardStatsButton";
 import { BackButton } from "../atoms/BackButton";
-import { Card } from "../molecules/Card";
+import { Card, PredictedFusionSlot } from "../molecules/Card";
 import { SpeedButton } from "../atoms/SpeedButton";
 import { FusionResults } from "../atoms/FusionResults";
+import { predictFusions } from "@/services/fusion";
+import { useCards } from "@/hooks/cards.hook";
+import { useMemo } from "preact/hooks";
+import { PredictionToggleButton } from "../atoms/PredictionToggleButton";
 
 export function HandTable() {
-  const { focusCardIndex, focusCard, setFocusCard, hand, selectHandCard } =
-    useSimulator();
+  const {
+    focusCardIndex,
+    focusCard,
+    setFocusCard,
+    hand,
+    selectHandCard,
+    resets,
+  } = useSimulator();
+
+  const { findCardById } = useCards();
 
   const { fusing } = useFusion();
+
+  const { isPredictionEnabled } = useSimulator();
+
+  // [hand-index, predicted]
+  const fusionChannels: PredictedFusionSlot[][] | null = useMemo(() => {
+    if (!isPredictionEnabled) {
+      return null;
+    }
+
+    const channels = predictFusions(hand, findCardById);
+
+    const results: PredictedFusionSlot[][] = [];
+
+    for (let i = 0; i < hand.length; i++) {
+      const cardChannels: PredictedFusionSlot[] = [];
+
+      for (let j = 0; j < channels.length; j++) {
+        const channel = channels[j];
+
+        if (channel.line.includes(i)) {
+          // Card is in this channel
+
+          cardChannels[j] = [
+            channel.line.indexOf(i) + 1,
+            channel.resultsId?.[channel.line.indexOf(i) - 1],
+          ];
+        }
+      }
+
+      // Result index = hand index
+      results[i] = cardChannels;
+    }
+
+    return results;
+  }, [resets, findCardById, isPredictionEnabled]);
 
   return (
     <div class={"h-[100vh] flex flex-col pixelated-font"}>
       <div
         class={
-          "z-10 flex flex-col gap-4 justify-center py-2 px-4 max-[424px]:py-0"
+          "z-10 flex flex-col gap-4 justify-center py-2 px-4 max-[527px]:py-0"
         }
         style={{
           background: `url(${appendAssetsAPIPath(
@@ -36,10 +83,10 @@ export function HandTable() {
         }}
       >
         <div
-          className={"flex justify-between items-center max-[424px]:flex-col"}
+          className={"flex justify-between items-center max-[527px]:flex-col"}
         >
           <div
-            class={"flex gap-4 max-[424px]:justify-between max-[424px]:w-full"}
+            class={"flex gap-4 max-[527px]:justify-between max-[527px]:w-full"}
           >
             <BackButton className={"w-min max-[718px]:px-3 max-[718px]:h-13"} />
             <PoolButton
@@ -53,8 +100,9 @@ export function HandTable() {
             />
           </div>
           <div
-            class={"flex gap-4 max-[424px]:justify-evenly max-[424px]:w-full"}
+            class={"flex gap-4 max-[527px]:justify-between max-[527px]:w-full"}
           >
+            <PredictionToggleButton />
             <CardStatsButton
               className={
                 "w-min max-[718px]:px-3 max-[718px]:h-13 max-[718px]:text-2xl py-0.5"
@@ -119,6 +167,7 @@ export function HandTable() {
                   focus={index === focusCardIndex}
                   onClick={() => selectHandCard()}
                   onHover={() => setFocusCard(index)}
+                  predictedChannels={fusionChannels?.[index]}
                 />
               ))}
             </div>

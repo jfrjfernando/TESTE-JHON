@@ -3,6 +3,19 @@ import { appendAssetsAPIPath, appendUrlPath } from "@/utils/path";
 import { LongNumber } from "./LongNumber";
 import { useFusion } from "@/hooks/fusion.hook";
 import { cn } from "@/lib/utils";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "../ui/hover-card";
+import { MiniCard } from "./MiniCard";
+
+/**
+ * [priority, result]
+ */
+export type PredictedFusionSlot =
+  | [number, CardBaseType | undefined]
+  | undefined;
 
 export type CardAssemblerProps = {
   id: CardBaseType["id"];
@@ -16,6 +29,7 @@ export type CardAssemblerProps = {
   priority?: number;
   index: number;
   props?: React.HTMLAttributes<HTMLDivElement>;
+  predictedChannels?: PredictedFusionSlot[];
 };
 
 export const CARD_FRAMES = {
@@ -48,6 +62,7 @@ export function Card({
   onHover,
   priority,
   index,
+  predictedChannels,
   props,
 }: CardAssemblerProps) {
   const { fusing } = useFusion();
@@ -70,6 +85,59 @@ export function Card({
       onClick={() => !fusing && onClick?.()}
       onMouseOver={() => !fusing && onHover?.()}
     >
+      {predictedChannels && (
+        <div className={"w-full"}>
+          <div className={"w-full flex justify-between"}>
+            <div
+              className={
+                "absolute z-40 flex justify-between w-full -translate-y-[93%]"
+              }
+            >
+              {predictedChannels[0] ? (
+                <PredictedChannel
+                  value={predictedChannels[0]}
+                  className="bg-red-400"
+                />
+              ) : (
+                <span className={"w-6 h-7"} />
+              )}
+              {predictedChannels[1] ? (
+                <PredictedChannel
+                  value={predictedChannels[1]}
+                  className="bg-yellow-400"
+                />
+              ) : (
+                <span className={"w-6 h-7"} />
+              )}
+              {predictedChannels[2] ? (
+                <PredictedChannel
+                  value={predictedChannels[2]}
+                  className="bg-blue-400"
+                />
+              ) : (
+                <span className={"w-6 h-7"} />
+              )}
+              {predictedChannels[3] ? (
+                <PredictedChannel
+                  value={predictedChannels[3]}
+                  className="bg-white"
+                />
+              ) : (
+                <span className={"w-6 h-7"} />
+              )}
+              {predictedChannels[4] ? (
+                <PredictedChannel
+                  value={predictedChannels[4]}
+                  className="bg-purple-400"
+                />
+              ) : (
+                <span className={"w-6 h-7"} />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {!fusing && priority && (
         <div
           className={"absolute z-40"}
@@ -163,4 +231,38 @@ export function Card({
       )}
     </div>
   );
+}
+
+function PredictedChannel({
+  value: [priority, result],
+  className,
+}: {
+  value: NonNullable<PredictedFusionSlot>;
+  className: HTMLDivElement["className"];
+}) {
+  const element = (
+    <div
+      className={cn("w-6 h-7 rounded-sm border hover:opacity-40", className)}
+    >
+      <p className={"text-black text-center text-xl"}>{priority}</p>
+    </div>
+  );
+
+  if (priority > 1) {
+    return (
+      <HoverCard openDelay={0} closeDelay={0}>
+        <HoverCardTrigger>{element}</HoverCardTrigger>
+        <HoverCardContent
+          className={cn(
+            "pointer-events-none p-2 -translate-y-[140px] bg-transparent shadow-none flex items-center justify-center w-min",
+            className
+          )}
+        >
+          {result && <MiniCard {...result} />}
+        </HoverCardContent>
+      </HoverCard>
+    );
+  }
+
+  return element;
 }

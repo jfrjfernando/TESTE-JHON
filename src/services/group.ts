@@ -4,6 +4,11 @@ import { STORAGE_KEY } from "../models/storage.entity";
 import { generateRandomID } from "../utils/uid";
 import { storageDispatch, extractFromStorage } from "./storage";
 
+export const DEFAULT_SELECTED_GROUPS = [
+  "default-random-types",
+  "default-pool-highest-fusion",
+];
+
 export function createEmptyGroup(): GroupType {
   const storage = extractFromStorage();
 

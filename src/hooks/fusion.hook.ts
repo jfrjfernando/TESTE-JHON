@@ -93,13 +93,20 @@ export function useFusion() {
                 const modificationValue =
                   (target as CardEquipType).modificationValue ?? 0;
 
-                // Bad practice (but a fast solution for state in async)
+                // Bad practice
 
-                (response.result as CardMonsterType).attack +=
-                  modificationValue;
+                const monster = response.result as CardMonsterType;
 
-                (response.result as CardMonsterType).defense +=
-                  modificationValue;
+                if (monster.attack && !(monster as any)?.originalAttack) {
+                  (monster as any).originalAttack = monster.attack;
+                }
+
+                if (monster.defense && !(monster as any)?.originalDefense) {
+                  (monster as any).originalDefense = monster.defense;
+                }
+
+                monster.attack += modificationValue;
+                monster.defense += modificationValue;
               }
             },
             i === 0
@@ -115,7 +122,26 @@ export function useFusion() {
 
       await new Promise((resolve) => setTimeout(resolve, 2200));
 
+      // Dispose
+
       clearCards(...cardsElements);
+
+      // Reset all modified stats
+      queue
+        .map((each) => each.result)
+        .forEach((card) => {
+          if (card.cardType === CardType.MONSTER) {
+            const monster = card as any as CardMonsterType;
+
+            if ((monster as any).originalAttack) {
+              monster.attack = (monster as any).originalAttack;
+            }
+
+            if ((monster as any).originalDefense) {
+              monster.defense = (monster as any).originalDefense;
+            }
+          }
+        });
 
       reset();
 

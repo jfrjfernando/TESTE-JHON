@@ -8,7 +8,7 @@ import { useData } from "@/hooks/data.hook";
 import { useCards } from "@/hooks/cards.hook";
 
 export function SimulatorProvider({ children }: PropsWithChildren) {
-  const [speed, setSpeed] = useState<1 | 2 | 3 | 4 | 5>(1);
+  const [resetTimes, setResetTimes] = useState<number>(0);
   const { groups, simulator } = useStorage();
   const { groups: defaultGroups } = useData();
   const { findCardById } = useCards();
@@ -47,12 +47,12 @@ export function SimulatorProvider({ children }: PropsWithChildren) {
   return (
     <SimulatorContext.Provider
       value={{
+        resets: resetTimes,
+        setResets: setResetTimes,
         hand,
         setHand,
         cards,
         setCards,
-        speed,
-        setSpeed,
       }}
     >
       {children}

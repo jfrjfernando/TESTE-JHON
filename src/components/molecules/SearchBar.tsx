@@ -19,7 +19,7 @@ import {
 import { appendUrlPath } from "@/utils/path";
 import { FixedSizeList } from "react-window";
 import { cn } from "@/lib/utils";
-import { padToThreeDigits } from "@/utils/strings";
+import { padToThreeDigits, toURLFriendlyString } from "@/utils/strings";
 import { useData } from "@/hooks/data.hook";
 
 export function SearchBar({
@@ -150,7 +150,7 @@ export function SearchBar({
                     return (
                       <a
                         href={appendUrlPath(
-                          `/cards/${encodeURIComponent(each.value)}`
+                          `/cards/${toURLFriendlyString(each.value)}`
                         )}
                       >
                         {element}
@@ -199,7 +199,7 @@ export function SearchBar({
                       return (
                         <a
                           href={appendUrlPath(
-                            `/cards/${encodeURIComponent(card.value)}`
+                            `/cards/${toURLFriendlyString(card.value)}`
                           )}
                         >
                           {element}
