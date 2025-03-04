@@ -6,7 +6,7 @@ import { useRouter } from "preact-router";
 import { cn } from "@/lib/utils";
 import { AnchorHTMLAttributes, useCallback } from "preact/compat";
 import { GithubIcon } from "lucide-react";
-import { getURLFriendlyString, padToThreeDigits, toURLFriendlyString } from "@/utils/strings";
+import { padToThreeDigits, toURLFriendlyString } from "@/utils/strings";
 import { useDataVolatile } from "@/hooks/data.hook";
 
 export function NavigationBar() {
