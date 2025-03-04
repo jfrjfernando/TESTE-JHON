@@ -6,7 +6,7 @@ import { useRouter } from "preact-router";
 import { cn } from "@/lib/utils";
 import { AnchorHTMLAttributes, useCallback } from "preact/compat";
 import { GithubIcon } from "lucide-react";
-import { padToThreeDigits } from "@/utils/strings";
+import { getURLFriendlyString, padToThreeDigits, toURLFriendlyString } from "@/utils/strings";
 import { useDataVolatile } from "@/hooks/data.hook";
 
 export function NavigationBar() {
@@ -53,7 +53,7 @@ export function NavigationBar() {
           <SearchBar
             cards={cards}
             onSelect={(cardName) => {
-              push(appendUrlPath(`/cards/${cardName}`));
+              push(appendUrlPath(`/cards/${toURLFriendlyString(cardName)}`));
             }}
           />
           <div className={"max-[336px]:hidden"}>
