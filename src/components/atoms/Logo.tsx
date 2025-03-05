@@ -4,28 +4,34 @@ import { appendUrlPath } from "@/utils/path";
 export function Logo({
   size,
   className,
+  highPriority,
 }: {
-  size: number;
+  size: "md";
   className?: string;
+  highPriority?: boolean;
 }) {
+  const sizePx = size === "md" ? 100 : 128;
+  const filename = size === "md" ? "logo100x100.webp" : "logo.webp";
+
   return (
     <div
       style={{
-        height: `${size * 0.3}px!important`,
-        width: `${size}px`,
         transform: "translate(0, 5%)",
+        marginRight: 2,
       }}
       class={cn("hover:animate-pulse max-[200px]:hidden", className)}
     >
       <a href={appendUrlPath("/")} aria-label="Home button">
         <img
-          src={appendUrlPath("/images/logo.webp")}
-          width={size * 1.35}
+          src={appendUrlPath(`/images/${filename}`)}
+          width={sizePx}
+          height={sizePx}
           alt={"App logo"}
           style={{
             objectFit: "cover",
           }}
-          class="max-sm:w-full z-20"
+          class="z-20"
+          fetchPriority={highPriority ? "high" : undefined}
         />
       </a>
     </div>

@@ -26,5 +26,39 @@ export default defineConfig(({ mode }) => {
         "@": path.resolve(__dirname, "./src"),
       },
     },
+    build: {
+      rollupOptions: {
+        output: {
+          chunkFileNames: "assets/[name]-[hash].js",
+          manualChunks(id) {
+            if (id.includes("node_modules")) {
+              if (id.includes("lucide-react")) {
+                return "a";
+              }
+
+              if (id.includes("@radix") || id.includes("preact-helmet")) {
+                return "b";
+              }
+
+              if (id.includes("cmdk") || id.includes("pako")) {
+                return "c";
+              }
+
+              if (
+                id.includes("tailwind") ||
+                id.includes("yup") ||
+                id.includes("react-window")
+              ) {
+                return "d";
+              }
+
+              return "n";
+            }
+
+            return "z";
+          },
+        },
+      },
+    },
   };
 });

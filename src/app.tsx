@@ -19,10 +19,20 @@ export function App() {
         [
           !isInSimulator ? (
             <img
-              src={appendAssetsAPIPath("/images/assets/main_background.jpg")}
+              srcset={`${appendAssetsAPIPath(
+                "/images/assets/main_background.webp"
+              )} 1920w, 
+                ${appendAssetsAPIPath(
+                  "/images/assets/main_background-1280x516.webp"
+                )} 1280w, 
+                ${appendAssetsAPIPath(
+                  "/images/assets/main_background-640x258.webp"
+                )} 640w`}
+              sizes="(max-width: 767px) 640px, 
+               (max-width: 1024px) 1280px, 
+               1920px"
+              src={appendAssetsAPIPath("/images/assets/main_background.webp")}
               alt={"Background image"}
-              width={"100%"}
-              height={"100%"}
               style={{
                 position: "fixed",
                 left: 0,

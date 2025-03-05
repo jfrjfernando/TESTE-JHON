@@ -26,7 +26,7 @@ dist-ssr
 # Local builder scripts
 src/scripts
 
-.env
+.env*
 
 # This assets should be uploaded into a static assets server
 external

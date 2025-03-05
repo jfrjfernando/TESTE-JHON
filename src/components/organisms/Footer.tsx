@@ -16,7 +16,7 @@ export function Footer() {
       <section class="bg-gradient-two border-2 p-4 rounded-4xl my-4">
         <div class="grid mb-2 gap-4 grid-cols-4 max-[497px]:grid-cols-2 max-[270px]:grid-cols-1">
           <div class="h-48 m-auto">
-            <Logo size={120} />
+            <Logo size={"md"} />
           </div>
           <FooterColumn
             title="Links"

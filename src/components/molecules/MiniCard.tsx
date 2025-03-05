@@ -54,6 +54,7 @@ export function MiniCard({
             width={(FRAME_SIZE.width * 0.85) / 1.7}
             height={(FRAME_SIZE.height * 0.82) / 1.7}
             className={"translate-y-[3px]"}
+            loading={"lazy"}
           />
         </div>
         {attack !== undefined && (
@@ -85,7 +86,12 @@ export function MiniCard({
               bottom: "2px",
             }}
           >
-            <LongNumber hiddenNumbers numbers={defense} width={11} height={11} />
+            <LongNumber
+              hiddenNumbers
+              numbers={defense}
+              width={11}
+              height={11}
+            />
           </div>
         )}
       </div>

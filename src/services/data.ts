@@ -8,13 +8,9 @@ const GROUPS_JSON_FILENAME = "groups_v1.json.gz";
 
 export async function loadAllCards(): Promise<CardBaseType[]> {
   try {
-    let response;
-
-    if (import.meta.env.DEV) {
-      response = await fetch(`/external/data/${APP_JSON_FILENAME}`);
-    } else {
-      response = await fetch(appendAssetsAPIPath(`/data/${APP_JSON_FILENAME}`));
-    }
+    const response = await fetch(
+      appendAssetsAPIPath(`/data/${APP_JSON_FILENAME}`)
+    );
 
     if (!response.ok) {
       throw new Error("Connection failed!");
@@ -22,7 +18,7 @@ export async function loadAllCards(): Promise<CardBaseType[]> {
 
     let appData;
 
-    if (import.meta.env.DEV) {
+    if (import.meta.env.DEV || import.meta.env.VITE_LOCAL) {
       appData = await response.json();
     } else {
       const data = await response.arrayBuffer();
@@ -45,19 +41,9 @@ export async function loadAllCards(): Promise<CardBaseType[]> {
 
 export async function loadAllGroups(): Promise<GroupType[]> {
   try {
-    let response;
-
-    if (import.meta.env.DEV) {
-      response = await fetch(`/external/data/${GROUPS_JSON_FILENAME}`);
-    } else {
-      response = await fetch(
-        appendAssetsAPIPath(`/data/${GROUPS_JSON_FILENAME}`)
-      );
-    }
-
-    if (!response.ok) {
-      throw new Error("Connection failed!");
-    }
+    const response = await fetch(
+      appendAssetsAPIPath(`/data/${GROUPS_JSON_FILENAME}`)
+    );
 
     if (!response.ok) {
       throw new Error("Connection failed!");
@@ -65,7 +51,7 @@ export async function loadAllGroups(): Promise<GroupType[]> {
 
     let appData;
 
-    if (import.meta.env.DEV) {
+    if (import.meta.env.DEV || import.meta.env.VITE_LOCAL) {
       appData = await response.json();
     } else {
       const data = await response.arrayBuffer();

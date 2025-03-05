@@ -1,7 +1,5 @@
-- Add card alignments
-- Add scroll loading for search combobox
 - Add gamepad API for inputs
-- Add equip fusion as adding damage or defense
+- Add modern javascript out file (legacy & polyfills output)
 
 TODAY:
 
@@ -20,3 +18,6 @@ TODAY:
 - Add VDH instead of VH (Try it on tablet & phone)
 
 * Check all memos, effects that use "hand" because when it is focus the state will change
+
++ Add home page, continue improving the SEO.
++ Add SSG.

@@ -47,8 +47,9 @@ export function NavigationBar() {
           }
         >
           <Logo
-            size={128}
+            size={"md"}
             className="max-[634px]:!w-[100px] max-[485px]:!w-[80px]"
+            highPriority
           />
           <SearchBar
             cards={cards}
