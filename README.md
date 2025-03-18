@@ -40,7 +40,7 @@ _**Special thanks to @Tromboncino for the idea and to @Layoso.**_
 
 A huge thank you to everyone who has supported this project!  
 
-- 🏆 **@Trombocino** – $6 
+- 🏆 **@Trombocino** – $17 
 
 ### Donate via PayPal:
 
