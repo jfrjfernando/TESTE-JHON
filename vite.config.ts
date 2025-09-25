@@ -19,7 +19,8 @@ export default defineConfig(({ mode }) => {
       generateSitemap(env.VITE_DOMAIN),
     ],
     server: {
-      port: 3333,
+      host: "0.0.0.0",
+      port: 5000,
     },
     resolve: {
       alias: {
