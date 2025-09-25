@@ -1,12 +1,14 @@
-import { defineConfig, loadEnv } from "vite";
+import { defineConfig } from "vite";
 import preact from "@preact/preset-vite";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import { VitePWA } from "vite-plugin-pwa";
 import { generateSitemap } from "./src/generators/sitemap.generator";
 
-export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), "");
+export default defineConfig(() => {
+  process.env.VITE_DOMAIN ??= "http://localhost:3333";
+  process.env.VITE_GOOGLE_VERIFICATION ??= "";
+  process.env.VITE_ASSETS_API ??= "/";
 
   return {
     plugins: [
@@ -16,7 +18,7 @@ export default defineConfig(({ mode }) => {
         registerType: "autoUpdate",
         manifest: false,
       }),
-      generateSitemap(env.VITE_DOMAIN),
+      generateSitemap(process.env.VITE_DOMAIN),
     ],
     server: {
       port: 3333,

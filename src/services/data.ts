@@ -18,7 +18,7 @@ export async function loadAllCards(): Promise<CardBaseType[]> {
 
     let appData;
 
-    if (import.meta.env.DEV || import.meta.env.VITE_LOCAL) {
+    if (import.meta.env.DEV) {
       appData = await response.json();
     } else {
       const data = await response.arrayBuffer();
@@ -51,7 +51,7 @@ export async function loadAllGroups(): Promise<GroupType[]> {
 
     let appData;
 
-    if (import.meta.env.DEV || import.meta.env.VITE_LOCAL) {
+    if (import.meta.env.DEV) {
       appData = await response.json();
     } else {
       const data = await response.arrayBuffer();

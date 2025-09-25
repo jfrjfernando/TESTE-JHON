@@ -3,7 +3,7 @@ export function appendUrlPath(path: string) {
 }
 
 export function appendAssetsAPIPath(path: string) {
-  const base = import.meta.env.VITE_ASSETS_API;
+  const base = import.meta.env.VITE_ASSETS_API || "";
 
   if (!base) {
     console.error("Internal Error: Assets API not found.");
