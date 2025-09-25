@@ -16,7 +16,10 @@ export default defineConfig(({ mode }) => {
         registerType: "autoUpdate",
         manifest: false,
       }),
-      generateSitemap(env.VITE_DOMAIN),
+      generateSitemap({
+        hostname: env.VITE_DOMAIN,
+        outDir: ".dist",
+      }),
     ],
     server: {
       port: 3333,
@@ -27,6 +30,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     build: {
+      outDir: ".dist",
       rollupOptions: {
         output: {
           chunkFileNames: "assets/[name]-[hash].js",

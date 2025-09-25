@@ -11,9 +11,16 @@ function generateCards() {
   );
 }
 
-export function generateSitemap(hostname: string) {
+export function generateSitemap({
+  hostname,
+  outDir,
+}: {
+  hostname: string;
+  outDir: string;
+}) {
   return Sitemap({
     hostname,
+    outDir,
     dynamicRoutes: [...generateMainRoutes(), ...generateCards()],
   });
 }
