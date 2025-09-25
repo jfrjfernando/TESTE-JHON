@@ -14,7 +14,32 @@ export default defineConfig(({ mode }) => {
       tailwindcss(),
       VitePWA({
         registerType: "autoUpdate",
-        manifest: false,
+        workbox: {
+          globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+        },
+        includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
+        manifest: {
+          name: 'Fusion Simulator - Yu-Gi-Oh! Forbidden Memories',
+          short_name: 'Fusion Simulator',
+          description: 'Test your Yu-Gi-Oh! fusion skills, explore fusion card combinations, and try your hand at the fusion playground.',
+          theme_color: '#cc893d',
+          background_color: '#3b2a1e',
+          display: 'standalone',
+          scope: '/',
+          start_url: '/',
+          icons: [
+            {
+              src: 'favicon-192x192.png',
+              sizes: '192x192',
+              type: 'image/png'
+            },
+            {
+              src: 'android-chrome-512x512.png',
+              sizes: '512x512',
+              type: 'image/png'
+            }
+          ]
+        }
       }),
       generateSitemap(env.VITE_DOMAIN),
     ],

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yu-Gi-Oh! Fusion Simulator - Local Server</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #3b2a1e;
+            color: #cc893d;
+            line-height: 1.6;
+        }
+        .container {
+            background: #2d1f14;
+            padding: 30px;
+            border-radius: 10px;
+            border: 2px solid #cc893d;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .button {
+            display: inline-block;
+            background: #cc893d;
+            color: #3b2a1e;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 10px 5px;
+            border: none;
+            cursor: pointer;
+        }
+        .button:hover {
+            background: #b8793a;
+        }
+        .info {
+            background: #1a1206;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #cc893d;
+        }
+        pre {
+            background: #1a1206;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .step {
+            margin: 20px 0;
+            padding: 15px;
+            background: #1a1206;
+            border-radius: 5px;
+        }
+        .step h3 {
+            margin-top: 0;
+            color: #cc893d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎴 Yu-Gi-Oh! Fusion Simulator - Offline Setup</h1>
+        
+        <div class="info">
+            <strong>🚀 Your app is ready to run offline!</strong><br>
+            Follow these simple steps to run the simulator locally in your browser.
+        </div>
+
+        <div class="step">
+            <h3>Option 1: Quick Start (Python - Recommended)</h3>
+            <p>If you have Python installed on your computer:</p>
+            <pre>python -m http.server 8080 --directory dist</pre>
+            <p>Then open: <strong>http://localhost:8080</strong></p>
+        </div>
+
+        <div class="step">
+            <h3>Option 2: Node.js Server</h3>
+            <p>If you have Node.js installed:</p>
+            <pre>npm install express
+node serve-local.js</pre>
+            <p>Then open: <strong>http://localhost:8080</strong></p>
+        </div>
+
+        <div class="step">
+            <h3>Option 3: File System (Limited)</h3>
+            <p>You can open <code>dist/index.html</code> directly in your browser, but some features may not work due to browser security restrictions.</p>
+        </div>
+
+        <div class="step">
+            <h3>🔌 Offline Features</h3>
+            <ul>
+                <li>✅ Complete offline functionality after first visit</li>
+                <li>✅ Progressive Web App (PWA) - can be installed</li>
+                <li>✅ Service Worker caches all resources</li>
+                <li>✅ Works without internet connection</li>
+                <li>✅ All game features available offline</li>
+            </ul>
+        </div>
+
+        <div class="info">
+            <strong>💡 Tip:</strong> After visiting the site once, it will work completely offline thanks to the Progressive Web App features!
+        </div>
+
+        <button class="button" onclick="openDist()">📁 Open dist folder</button>
+        <button class="button" onclick="copyCommand()">📋 Copy Python command</button>
+        
+        <script>
+            function openDist() {
+                if (confirm('This will try to open the dist folder in your file manager.')) {
+                    window.open('dist/', '_blank');
+                }
+            }
+            
+            function copyCommand() {
+                navigator.clipboard.writeText('python -m http.server 8080 --directory dist').then(() => {
+                    alert('Command copied to clipboard!');
+                });
+            }
+        </script>
+    </div>
+</body>
+</html>
